@@ -21,7 +21,6 @@ int main()
     char format [32];
     sprintf(format, "%c%ds", '%', buffersize-1);
 
-
     int n_cols = 0;
 
     // process first line
@@ -38,58 +37,43 @@ int main()
         return 1;
     }
 
-    vector<int> valid;
+    int value_count = 0;
     int count = 0;
     int res;
     do {
         res = fscanf(file, format, buffer);
         
-        if (res != -1) {
+        if (res == -1) {
+            break;
+        }
 
-            count++;
-            if (count%10000==0) {
-                printf("%d lines read.\n", count);
-            }
+        count++;
+        if (count%10000==0) {
+            printf("%d lines read.\n", count);
+        }
 
-            int n_chars = strlen(buffer);
-            int left=0, right=0;
+        int n_chars = strlen(buffer);
+        int left=0, right=0;
 
-            bool empty_col = false;
-            int col_count = 0;
-            while (right < n_chars) {
+        while (right < n_chars) {
 
-                if (buffer[right]==',') {
+            if (buffer[right]==',') {
 
-                    if (right-left==1) {
-                        empty_col = true;
-                        break;
-                    }
-
-                    else {
-                        col_count++;
-                        left=right;
-                        right++;
-                        empty_col = false;
-                    }
-
-                    if (col_count==10)
-                        break;
-
+                if (right-left > 1) {
+                    value_count++;
                 }
 
-                else
-                    right++;
+                left = right++;
             }
 
-            if (!empty_col) {
-                valid.push_back(count);
-            }
+            else
+                right++;
         }
 
     } while(res != -1);
 
     printf("Number of lines: %d\n", count);
-    printf("Number of valid lines: %d\n", valid.size());
+    printf("Number of values: %d\n", value_count);
 
     printf("End of file.\n");
     fclose(file);
