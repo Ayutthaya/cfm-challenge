@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cstring>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -21,14 +22,20 @@ int main()
     char format [32];
     sprintf(format, "%c%ds", '%', buffersize-1);
 
-    int n_cols = 0;
+    vector<string> column_names;
+    int n_cols;
 
     // process first line
     if (fscanf(file, format, buffer) != -1) {
         int n_chars = strlen(buffer);
-        for (int i=0; i<n_chars; i++)
-            if (buffer[i]==',')
-                n_cols++;
+        int left = 0, right = 0;
+        for (int right=0; right<=n_chars; right++) {
+            if (right==n_chars || buffer[right]==',') {
+                column_names.emplace_back(buffer+left, right-left);
+                left=right;
+            }
+        }
+        n_cols = column_names.size();
         printf("Number of columns: %d\n", n_cols);
     }
     else {
@@ -37,8 +44,11 @@ int main()
         return 1;
     }
 
-    int value_count = 0;
-    int count = 0;
+
+    double threshold = 0.9;
+    vector<int> similar_lines;
+    vector<bool> first_line_indices(n_cols, false);
+    int line_count = 0;
     int res;
     do {
         res = fscanf(file, format, buffer);
@@ -47,33 +57,54 @@ int main()
             break;
         }
 
-        count++;
-        if (count%10000==0) {
-            printf("%d lines read.\n", count);
-        }
-
+        vector<bool> current_line_indices(n_cols, false);
+        int col_count=0;
         int n_chars = strlen(buffer);
         int left=0, right=0;
-
         while (right < n_chars) {
+
 
             if (buffer[right]==',') {
 
-                if (right-left > 1) {
-                    value_count++;
+                if (line_count==0) {
+                    if (right-left > 1) {
+                        first_line_indices[col_count]=true;
+                    }
                 }
 
-                left = right++;
-            }
+                else {
+                    if (right-left > 1) {
+                        current_line_indices[col_count]=true;
+                    }
+                }
 
-            else
-                right++;
+                col_count++;
+                left = right;
+            }
+            right++;
+        }
+
+        int union_count = 0;
+        int inter_count = 0;
+        for (int i=0; i<n_cols; i++) {
+            union_count += first_line_indices[i] || current_line_indices[i];
+            inter_count += first_line_indices[i] && current_line_indices[i];
+        }
+
+        double jaccard_similarity = double(inter_count) / double(union_count);
+        if (jaccard_similarity > threshold)
+            similar_lines.push_back(line_count);
+
+        line_count++;
+        if (line_count%10000==0) {
+            printf("%d lines read.\n", line_count);
+            printf("%d lines similar to the first one.\n", similar_lines.size());
         }
 
     } while(res != -1);
 
-    printf("Number of lines: %d\n", count);
-    printf("Number of values: %d\n", value_count);
+    printf("Number of lines: %d\n", line_count);
+    printf("Number of lines similar to the first line: %d\n", similar_lines.size());
 
     printf("End of file.\n");
     fclose(file);
