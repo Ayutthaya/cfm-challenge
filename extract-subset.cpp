@@ -6,14 +6,24 @@
 
 using namespace std;
 
+#define DEBUG 0
+
 int main()
 {
-    const char * filename = "/home/nath/Projects/Kaggle/data/uncompressed-data/train_numeric.csv";
-    FILE * file;
+    const char * r_filename = "/home/nath/Projects/Kaggle/data/uncompressed-data/train_numeric.csv";
+    const char * w_filename = "/tmp/subset.csv";
+    FILE * r_file, * w_file;
 
-    file = fopen(filename, "r");
-    if (file==nullptr) {
-        printf("Could not open file.\n");
+    r_file = fopen(r_filename, "r");
+    if (r_file==nullptr) {
+        printf("Could not open file for reading.\n");
+        return 1;
+    }
+
+    w_file = fopen(w_filename, "w");
+    if (w_file==nullptr) {
+        fclose(r_file);
+        printf("Could not open file for writing.\n");
         return 1;
     }
 
@@ -27,7 +37,7 @@ int main()
     int n_cols;
 
     // process first line
-    if (fscanf(file, format, buffer) != -1) {
+    if (fscanf(r_file, format, buffer) != -1) {
         int n_chars = strlen(buffer);
         int left = 0, right = 0;
         for (int right=0; right<=n_chars; right++) {
@@ -40,21 +50,27 @@ int main()
         printf("Number of columns: %d\n", n_cols);
     }
     else {
-        fclose(file);
+        fclose(r_file);
+        fclose(w_file);
         printf("A problem occurred when reading the file.\n");
         return 1;
     }
 
+    // write first line
+    if (fprintf(w_file, "%s\n", buffer) == -1) {
+        fclose(r_file);
+        fclose(w_file);
+        printf("A problem occurred when writing into the file.");
+        return 1; 
+    }
 
-    static constexpr int n_bins = 1000;
-    vector<int> histo(n_bins+1);
     double threshold = 0.9;
     vector<int> similar_lines;
     vector<bool> first_line_indices(n_cols, false);
     int line_count = 0;
     int res;
     do {
-        res = fscanf(file, format, buffer);
+        res = fscanf(r_file, format, buffer);
         
         if (res == -1) {
             break;
@@ -95,9 +111,10 @@ int main()
         }
 
         double jaccard_similarity = double(inter_count) / double(union_count);
-        histo[round(jaccard_similarity*n_bins)]++;
-        if (jaccard_similarity > threshold)
+        if (jaccard_similarity > threshold) {
             similar_lines.push_back(line_count);
+            fprintf(w_file, "%s\n", buffer);
+        }
 
         line_count++;
         if (line_count%10000==0) {
@@ -112,23 +129,11 @@ int main()
     } while(res != -1);
 
     printf("End of file.\n");
-    fclose(file);
+    fclose(r_file);
+    fclose(w_file);
 
     printf("Number of lines: %d\n", line_count);
     printf("Number of lines similar to the first line: %d\n", similar_lines.size());
-
-    file = fopen("/tmp/histo_values.csv", "w");
-
-    if (file == nullptr) {
-        printf("Could not open file.\n");
-        return 1;
-    }
-
-    for (int val : histo) {
-        fprintf(file, "%d,", val);
-    }
-
-    fclose(file);
 
     return 0;
 }
