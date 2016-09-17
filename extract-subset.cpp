@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstring>
+#include <cmath>
 #include <vector>
 #include <string>
 
@@ -16,7 +17,7 @@ int main()
         return 1;
     }
 
-    const int buffersize = 1000000;
+    static constexpr int buffersize = 1000000;
     char buffer [buffersize];
 
     char format [32];
@@ -45,6 +46,8 @@ int main()
     }
 
 
+    static constexpr int n_bins = 1000;
+    vector<int> histo(n_bins+1);
     double threshold = 0.9;
     vector<int> similar_lines;
     vector<bool> first_line_indices(n_cols, false);
@@ -92,6 +95,7 @@ int main()
         }
 
         double jaccard_similarity = double(inter_count) / double(union_count);
+        histo[round(jaccard_similarity*n_bins)]++;
         if (jaccard_similarity > threshold)
             similar_lines.push_back(line_count);
 
@@ -101,12 +105,29 @@ int main()
             printf("%d lines similar to the first one.\n", similar_lines.size());
         }
 
+#if DEBUG
+        if (line_count>1000)
+            break;
+#endif
     } while(res != -1);
+
+    printf("End of file.\n");
+    fclose(file);
 
     printf("Number of lines: %d\n", line_count);
     printf("Number of lines similar to the first line: %d\n", similar_lines.size());
 
-    printf("End of file.\n");
+    file = fopen("/tmp/histo_values.csv", "w");
+
+    if (file == nullptr) {
+        printf("Could not open file.\n");
+        return 1;
+    }
+
+    for (int val : histo) {
+        fprintf(file, "%d,", val);
+    }
+
     fclose(file);
 
     return 0;
