@@ -10,7 +10,7 @@ using namespace std;
 
 int main()
 {
-    const char * r_filename = "/home/nath/Projects/Kaggle/data/uncompressed-data/train_numeric.csv";
+    const char * r_filename = "/tmp/train_numeric.csv";
     const char * w_filename = "/tmp/subset.csv";
     FILE * r_file, * w_file;
 
