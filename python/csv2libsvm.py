@@ -11,7 +11,7 @@ It might be relevant to let it as a feature though.
 The last column (Response) contains the labels.
 
 Usage:
-    python csv2libsvm.py /path/to/train_numeric.csv /path/to/train_numeric.libsvm.txt
+    python csv2libsvm.py /path/to/train_numeric.csv /path/to/train_numeric.svm.txt
 
     Adjust LINE_START and LINE_END to select a subset of the dataset.
 
