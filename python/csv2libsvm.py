@@ -23,8 +23,8 @@ from collections import defaultdict
 
 # PARAMETERS
 LABEL_INDEX = 969 # column Response
-LINE_START = 0
-LINE_END = 100000
+LINE_START = 500000
+LINE_END = 1000000
 
 def construct_line( label, line ):
     new_line = []
@@ -57,16 +57,14 @@ for line in reader:
 
     line_count += 1
 
-    if line_count <= LINE_START:
+    if line_count < LINE_START:
         continue
 
     if line_count >= LINE_END:
         break
 
-    if label_index == -1:
-        label = '1'
-    else:
-        label = line.pop( label_index )
+    # remove label
+    label = line.pop(LABEL_INDEX)
 
     # skip Id column
     line.pop(0)
