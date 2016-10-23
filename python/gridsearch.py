@@ -10,7 +10,7 @@ hdlr = logging.FileHandler('/home/ubuntu/gridsearch.log')
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 hdlr.setFormatter(formatter)
 logger.addHandler(hdlr) 
-logger.setLevel(logging.WARNING)
+logger.setLevel(logging.INFO)
 
 def mcc(tp, tn, fp, fn):
     sup = tp * tn - fp * fn
@@ -70,6 +70,8 @@ def mcc_eval(y_prob, dtrain):
     best_mcc = eval_mcc(y_true, y_prob)
     return 'MCC', 1-best_mcc
 
+logger.info('loading data')
+hdlr.flush()
 dtrain = xgb.DMatrix('/home/ubuntu/upload/train.svm')
 
 y=dtrain.get_label()
