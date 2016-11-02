@@ -26,3 +26,5 @@ sudo git submodule update
 sudo ./build.sh
 cd python-package
 sudo ~/anaconda3/bin/python setup.py install
+cd
+conda install libgcc
