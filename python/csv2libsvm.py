@@ -23,10 +23,10 @@ from collections import defaultdict
 
 # PARAMETERS
 LABEL_INDEX = 969 # column Response
-LINE_TRAIN_START = 0
-LINE_TRAIN_END = 100000
-LINE_TEST_START = 100000
-LINE_TEST_END = 200000
+#LINE_TRAIN_START = 0
+#LINE_TRAIN_END = 1100000
+#LINE_TEST_START = 1100000
+#LINE_TEST_END = 1100000
 
 def construct_line( label, line ):
     new_line = []
@@ -44,12 +44,14 @@ def construct_line( label, line ):
     return new_line
 
 input_file = sys.argv[1]
-train_file = sys.argv[2]
-test_file = sys.argv[3]
+output_file = sys.argv[2]
+#train_file = sys.argv[2]
+#test_file = sys.argv[3]
 
 i = open( input_file, 'r' )
-train = open( train_file, 'w' )
-test = open( test_file, 'w' )
+o = open( output_file, 'w' )
+#train = open( train_file, 'w' )
+#test = open( test_file, 'w' )
 
 reader = csv.reader( i )
 
@@ -60,23 +62,25 @@ line_count = 0
 for line in reader:
 
     # get label
-    label = line.pop(LABEL_INDEX)
+    #label = line.pop(LABEL_INDEX)
+    label = 0
 
     # skip Id column
     line.pop(0)
 
-    new_line = construct_line( label, line )
+    new_line = construct_line( 0, line )
+    o.write(new_line)
 
-    if line_count >= LINE_TRAIN_START and line_count < LINE_TRAIN_END:
-        train.write(new_line)
+    #if line_count >= LINE_TRAIN_START and line_count < LINE_TRAIN_END:
+        #train.write(new_line)
 
-    if line_count >= LINE_TEST_START and line_count < LINE_TEST_END:
-        test.write(new_line)
+    #if line_count >= LINE_TEST_START and line_count < LINE_TEST_END:
+        #test.write(new_line)
 
     line_count += 1
 
     if line_count%10000 == 0:
         print('%d lines processed.' % line_count)
 
-    if line_count >= LINE_TRAIN_START and line_count >= LINE_TEST_END:
-        break
+    #if line_count >= LINE_TRAIN_START and line_count >= LINE_TEST_END:
+        #break
