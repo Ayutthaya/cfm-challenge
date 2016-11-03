@@ -27,4 +27,7 @@ sudo ./build.sh
 cd python-package
 sudo ~/anaconda3/bin/python setup.py install
 cd
+
+# source bashrc
+. .bashrc
 conda install libgcc
