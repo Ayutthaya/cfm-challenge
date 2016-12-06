@@ -25,6 +25,9 @@ DAY=4679
 HALFDAY=2239
 
 USEFEATURES = ['ID',  'ask_1', 'bid_size_1', 'ask_size_1', 'bid_1', 'nb_trade', 'bid_entropy_1', 'ask_entropy_1', 'bid_size_2', 'ask_size_2', 'bid_entry_1', 'ask_entry_1', 'bid_entry_2', 'ask_entry_2']
+DAY=4679
+HALFDAY=2239
+
 SKIPFEATURES = 4
 NEWFEATURES = ['spread', 'bid_plus_ask', 'bid_pct']
 
