@@ -10,9 +10,6 @@ wget https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh
 chmod +x Anaconda3-4.2.0-Linux-x86_64.sh
 ./Anaconda3-4.2.0-Linux-x86_64.sh
 
-# source bashrc
-. .bashrc
-
 # install xgboost
 sudo apt-get update
 sudo apt-get -qq -y install make
@@ -28,6 +25,8 @@ cd python-package
 sudo ~/anaconda3/bin/python setup.py install
 cd
 
-# source bashrc
-. .bashrc
-conda install libgcc
+# install more recent libgcc
+~/anaconda3/bin/conda install libgcc
+
+# install unzip
+sudo apt-get -qq -y install unzip
