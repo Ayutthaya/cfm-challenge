@@ -18,6 +18,9 @@ CHUNKSIZE=8
 NCHUNKS=10
 LASTROW=7
 
+MINUTE=8
+TENMINUTES=78
+HOUR=470
 DAY=4679
 HALFDAY=2239
 
@@ -39,6 +42,30 @@ for stage in ('train', 'test'):
 
     print('computing diff')
     data_diff = data_all.iloc[:, SKIPFEATURES:].diff()
+
+    print('computing rolling mean 1 min')
+    data_roll_mean_1m = pandas.rolling_mean(data_all.iloc[:, SKIPFEATURES:], window=MINUTE, center=True)
+
+    print('computing rolling mean 10 min')
+    data_roll_mean_10m = pandas.rolling_mean(data_all.iloc[:, SKIPFEATURES:], window=TENMINUTES, center=True)
+
+    print('computing rolling mean 1 hour')
+    data_roll_mean_1h = pandas.rolling_mean(data_all.iloc[:, SKIPFEATURES:], window=HOUR, center=True)
+
+    print('computing rolling mean 1 day')
+    data_roll_mean_1d = pandas.rolling_mean(data_all.iloc[:, SKIPFEATURES:], window=DAY, center=True)
+
+    print('computing rolling std 1 min')
+    data_roll_std_1m = pandas.rolling_mean(data_all.iloc[:, SKIPFEATURES:], window=MINUTE, center=True)
+
+    print('computing rolling std 10 min')
+    data_roll_std_10m = pandas.rolling_std(data_all.iloc[:, SKIPFEATURES:], window=TENMINUTES, center=True)
+
+    print('computing rolling std 1 hour')
+    data_roll_std_1h = pandas.rolling_std(data_all.iloc[:, SKIPFEATURES:], window=HOUR, center=True)
+
+    print('computing rolling std 1 day')
+    data_roll_std_1d = pandas.rolling_std(data_all.iloc[:, SKIPFEATURES:], window=DAY, center=True)
 
     print('computing past diff')
     past_diff_feat = np.hstack([data_diff.iloc[i::8, :].values for i in range(1,8)])
@@ -67,7 +94,7 @@ for stage in ('train', 'test'):
     #data=np.c_[past_diff_feat, pres_orig_feat, time_feat]
     #data=np.c_[pres_orig_feat, time_feat]
     #data=pres_orig_feat
-    data=np.c_[past_diff_feat, fut_diff_feat, pres_orig_feat, time_feat]
+    data=np.c_[past_diff_feat, fut_diff_feat, pres_orig_feat, time_feat, data_roll_mean_1m, data_roll_mean_10m, data_roll_mean_1h, data_roll_mean_1d, data_roll_std_1m, data_roll_std_10m, data_roll_std_1h, data_roll_std_1d]
 
     print('save train/testset')
     if stage=='train':
