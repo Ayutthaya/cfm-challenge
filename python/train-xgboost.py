@@ -1,6 +1,6 @@
 # coding: utf-8
 
-get_ipython().magic('pylab inline')
+import numpy as np
 import pandas
 import xgboost as xgb
 
@@ -32,6 +32,9 @@ SKIPFEATURES = 4
 NEWFEATURES = ['spread', 'bid_plus_ask', 'bid_pct']
 
 for stage in ('train', 'test'):
+
+    break
+
     print('loading data')
     if stage=='train':
         data_all = pandas.read_csv(TRAINFILE, usecols=USEFEATURES)
@@ -47,28 +50,28 @@ for stage in ('train', 'test'):
     data_diff = data_all.iloc[:, SKIPFEATURES:].diff()
 
     print('computing rolling mean 1 min')
-    data_roll_mean_1m = pandas.rolling_mean(data_all.iloc[:, SKIPFEATURES:], window=MINUTE, center=True)
+    data_roll_mean_1m = pandas.rolling_mean(data_all.iloc[7::8, SKIPFEATURES:], window=MINUTE, center=True)
 
     print('computing rolling mean 10 min')
-    data_roll_mean_10m = pandas.rolling_mean(data_all.iloc[:, SKIPFEATURES:], window=TENMINUTES, center=True)
+    data_roll_mean_10m = pandas.rolling_mean(data_all.iloc[7::8, SKIPFEATURES:], window=TENMINUTES, center=True)
 
     print('computing rolling mean 1 hour')
-    data_roll_mean_1h = pandas.rolling_mean(data_all.iloc[:, SKIPFEATURES:], window=HOUR, center=True)
+    data_roll_mean_1h = pandas.rolling_mean(data_all.iloc[7::8, SKIPFEATURES:], window=HOUR, center=True)
 
     print('computing rolling mean 1 day')
-    data_roll_mean_1d = pandas.rolling_mean(data_all.iloc[:, SKIPFEATURES:], window=DAY, center=True)
+    data_roll_mean_1d = pandas.rolling_mean(data_all.iloc[7::8, SKIPFEATURES:], window=DAY, center=True)
 
     print('computing rolling std 1 min')
-    data_roll_std_1m = pandas.rolling_mean(data_all.iloc[:, SKIPFEATURES:], window=MINUTE, center=True)
+    data_roll_std_1m = pandas.rolling_mean(data_all.iloc[7::8, SKIPFEATURES:], window=MINUTE, center=True)
 
     print('computing rolling std 10 min')
-    data_roll_std_10m = pandas.rolling_std(data_all.iloc[:, SKIPFEATURES:], window=TENMINUTES, center=True)
+    data_roll_std_10m = pandas.rolling_std(data_all.iloc[7::8, SKIPFEATURES:], window=TENMINUTES, center=True)
 
     print('computing rolling std 1 hour')
-    data_roll_std_1h = pandas.rolling_std(data_all.iloc[:, SKIPFEATURES:], window=HOUR, center=True)
+    data_roll_std_1h = pandas.rolling_std(data_all.iloc[7::8, SKIPFEATURES:], window=HOUR, center=True)
 
     print('computing rolling std 1 day')
-    data_roll_std_1d = pandas.rolling_std(data_all.iloc[:, SKIPFEATURES:], window=DAY, center=True)
+    data_roll_std_1d = pandas.rolling_std(data_all.iloc[7::8, SKIPFEATURES:], window=DAY, center=True)
 
     print('computing past diff')
     past_diff_feat = np.hstack([data_diff.iloc[i::8, :].values for i in range(1,8)])
@@ -79,7 +82,7 @@ for stage in ('train', 'test'):
     fut_diff_feat = np.r_[fut_diff_feat, np.zeros((1, fut_diff_feat.shape[1]))]
 
     print('computing pres orig')
-    pres_orig_feat = data_all.iloc[7::8, SKIPFEATURES].values
+    pres_orig_feat = data_all.iloc[7::8, SKIPFEATURES:].values
 
     print('comuting past orig')
     past_orig_feat = np.hstack([data_all.iloc[i::8, 1:len(USEFEATURES)].values for i in range(8)])
@@ -88,7 +91,7 @@ for stage in ('train', 'test'):
     if stage=='train':
         time_feat = (data_all.iloc[7::8, 0].values-1)%DAY
     else:
-        time_feat = (test_all.iloc[7::8, 0].values-1+HALFDAY)%DAY
+        time_feat = (data_all.iloc[7::8, 0].values-1+HALFDAY)%DAY
 
     print('computing entropy-based features')
     entropy_feat = data_all.ix[7::8, ['bid_entropy_1', 'ask_entropy_1']]
@@ -96,8 +99,12 @@ for stage in ('train', 'test'):
     print('create train/testset')
     #data=np.c_[past_diff_feat, pres_orig_feat, time_feat]
     #data=np.c_[pres_orig_feat, time_feat]
-    #data=pres_orig_feat
-    data=np.c_[past_diff_feat, fut_diff_feat, pres_orig_feat, time_feat, data_roll_mean_1m, data_roll_mean_10m, data_roll_mean_1h, data_roll_mean_1d, data_roll_std_1m, data_roll_std_10m, data_roll_std_1h, data_roll_std_1d]
+    data=pres_orig_feat
+    print(data.shape)
+    #for x in [past_diff_feat, fut_diff_feat, pres_orig_feat, time_feat, data_roll_mean_1m, data_roll_mean_10m, data_roll_mean_1h, data_roll_mean_1d, data_roll_std_1m, data_roll_std_10m, data_roll_std_1h, data_roll_std_1d]:
+    #    print(x.shape)
+
+    #data=np.c_[pres_orig_feat, time_feat, data_roll_mean_1m, data_roll_mean_10m, data_roll_mean_1h, data_roll_mean_1d, data_roll_std_1m, data_roll_std_10m, data_roll_std_1h, data_roll_std_1d]
 
     print('save train/testset')
     if stage=='train':
@@ -115,7 +122,7 @@ print('setting up params')
 prior=label.mean()
 params={}
 params['bst:eta'] = 0.1
-params['bst:max_depth'] = 10
+params['bst:max_depth'] = 4
 params['min_child_weight'] = 4
 params['objective'] = 'binary:logistic'
 params['nthread'] = 4
@@ -125,7 +132,7 @@ params['lambda'] = 0.1
 params['base_score'] = prior
 
 print('starting cross-validation')
-res = xgb.cv(params, dtrain, num_boost_round=1000, verbose_eval=True, nfold=4, seed=0, early_stopping_rounds=10, show_stdv=True)
+res = xgb.cv(params, dtrain, num_boost_round=100, nfold=2, seed=0, early_stopping_rounds=10, callbacks=[xgb.callback.print_evaluation(show_stdv=True)])
 
 print('printing results')
 print(res)
