@@ -99,12 +99,10 @@ for stage in ('train', 'test'):
     print('create train/testset')
     #data=np.c_[past_diff_feat, pres_orig_feat, time_feat]
     #data=np.c_[pres_orig_feat, time_feat]
-    data=pres_orig_feat
-    print(data.shape)
-    #for x in [past_diff_feat, fut_diff_feat, pres_orig_feat, time_feat, data_roll_mean_1m, data_roll_mean_10m, data_roll_mean_1h, data_roll_mean_1d, data_roll_std_1m, data_roll_std_10m, data_roll_std_1h, data_roll_std_1d]:
-    #    print(x.shape)
+    #data=pres_orig_feat
+    data=np.c_[past_diff_feat, fut_diff_feat, pres_orig_feat, time_feat, data_roll_mean_1m, data_roll_mean_10m, data_roll_mean_1h, data_roll_mean_1d, data_roll_std_1m, data_roll_std_10m, data_roll_std_1h, data_roll_std_1d]
 
-    #data=np.c_[pres_orig_feat, time_feat, data_roll_mean_1m, data_roll_mean_10m, data_roll_mean_1h, data_roll_mean_1d, data_roll_std_1m, data_roll_std_10m, data_roll_std_1h, data_roll_std_1d]
+    print('data shape: %s' % repr(data.shape))
 
     print('save train/testset')
     if stage=='train':
@@ -122,7 +120,7 @@ print('setting up params')
 prior=label.mean()
 params={}
 params['bst:eta'] = 0.1
-params['bst:max_depth'] = 4
+params['bst:max_depth'] = 10
 params['min_child_weight'] = 4
 params['objective'] = 'binary:logistic'
 params['nthread'] = 4
@@ -132,7 +130,7 @@ params['lambda'] = 0.1
 params['base_score'] = prior
 
 print('starting cross-validation')
-res = xgb.cv(params, dtrain, num_boost_round=100, nfold=2, seed=0, early_stopping_rounds=10, callbacks=[xgb.callback.print_evaluation(show_stdv=True)])
+res = xgb.cv(params, dtrain, num_boost_round=1000, nfold=4, seed=0, early_stopping_rounds=100, callbacks=[xgb.callback.print_evaluation(show_stdv=True)])
 
 print('printing results')
 print(res)
