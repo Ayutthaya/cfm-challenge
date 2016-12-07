@@ -17,6 +17,7 @@ sudo apt-get -qq -y install gcc
 sudo apt-get -qq -y install g++
 sudo apt-get -qq -y install git
 sudo git clone https://github.com/dmlc/xgboost
+sudo git checkout tags/v0.60
 cd xgboost
 sudo git submodule init
 sudo git submodule update
