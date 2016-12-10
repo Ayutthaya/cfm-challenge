@@ -33,8 +33,6 @@ NEWFEATURES = ['spread', 'bid_plus_ask', 'bid_pct']
 
 for stage in ('train', 'test'):
 
-    break
-
     print('loading data')
     if stage=='train':
         data_all = pandas.read_csv(TRAINFILE, usecols=USEFEATURES)
