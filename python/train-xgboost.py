@@ -25,11 +25,12 @@ HOUR=470
 DAY=4679
 HALFDAY=2239
 
-USEFEATURES = ['ID',  'ask_1', 'bid_size_1', 'ask_size_1', 'bid_1', 'nb_trade', 'bid_entropy_1', 'ask_entropy_1', 'bid_size_2', 'ask_size_2', 'bid_entry_1', 'ask_entry_1', 'bid_entry_2', 'ask_entry_2']
+USEFEATURES = ['ID', 'offset', 'ask_1', 'bid_size_1', 'ask_size_1', 'bid_1', 'nb_trade', 'bid_entropy_1', 'ask_entropy_1', 'bid_size_2', 'ask_size_2', 'bid_entry_1', 'ask_entry_1', 'bid_entry_2', 'ask_entry_2']
 DAY=4679
 HALFDAY=2239
 
-SKIPFEATURES = 4
+SKIPIDANDOFFSET=2
+SKIPFEATURES = 5
 NEWFEATURES = ['spread', 'bid_plus_ask', 'bid_pct']
 
 for stage in ('train', 'test'):
@@ -47,6 +48,12 @@ for stage in ('train', 'test'):
 
     print('computing diff')
     data_diff = data_all.iloc[:, SKIPFEATURES:].diff()
+
+    print('compressing dataset')
+    data_compressed = data_all[data_all['offset']>=500 & data_all['offset']==0]
+
+    print('computing compressed diff')
+    data_diff = data_compressed.iloc[:, SKIPFEATURES:].diff()
 
     print('computing rolling mean 1 min')
     data_roll_mean_1m = data_all.iloc[7::8, SKIPFEATURES:].rolling(window=MINUTE, center=True).mean()
@@ -80,11 +87,19 @@ for stage in ('train', 'test'):
     # fix end
     fut_diff_feat = np.r_[fut_diff_feat, np.zeros((1, fut_diff_feat.shape[1]))]
 
+    print('computing past diff compressed')
+    past_diff_feat_compressed = np.hstack([data_diff.iloc[i::8, :].values for i in range(1,3)])
+
+    print('computing fut diff compressed')
+    fut_diff_feat_compressed = np.hstack([data_diff.iloc[i+7::8, :].values for i in range(1,4)])
+    # fix end
+    fut_diff_feat_compressed = np.r_[fut_diff_feat_compressed, np.zeros((1, fut_diff_feat.shape[1]))]
+
     print('computing pres orig')
     pres_orig_feat = data_all.iloc[7::8, SKIPFEATURES:].values
 
     print('computing past orig')
-    past_orig_feat = np.hstack([data_all.iloc[i::8, 1:len(USEFEATURES)].values for i in range(8)])
+    past_orig_feat = np.hstack([data_all.iloc[i::8, SKIPIDANDOFFSET:len(USEFEATURES)].values for i in range(8)])
 
     print('computing time feature')
     if stage=='train':
@@ -96,7 +111,7 @@ for stage in ('train', 'test'):
     entropy_feat = data_all.ix[7::8, ['bid_entropy_1', 'ask_entropy_1']]
 
     print('create train/testset')
-    data=np.c_[past_diff_feat, fut_diff_feat, pres_orig_feat, time_feat, data_roll_mean_1m, data_roll_mean_10m, data_roll_mean_1h, data_roll_mean_1d, data_roll_std_1m, data_roll_std_10m, data_roll_std_1h, data_roll_std_1d]
+    data=np.c_[past_diff_feat_compressed, fut_diff_feat_compressed, pres_orig_feat, time_feat, data_roll_mean_1m, data_roll_mean_10m, data_roll_mean_1h, data_roll_mean_1d, data_roll_std_1m, data_roll_std_10m, data_roll_std_1h, data_roll_std_1d]
 
     print('data shape: %s' % repr(data.shape))
 
