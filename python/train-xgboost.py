@@ -50,28 +50,28 @@ for stage in ('train', 'test'):
     data_diff = data_all.iloc[:, SKIPFEATURES:].diff()
 
     print('computing rolling mean 1 min')
-    data_roll_mean_1m = pandas.rolling_mean(data_all.iloc[7::8, SKIPFEATURES:], window=MINUTE, center=True)
+    data_roll_mean_1m = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=MINUTE, center=True).mean()
 
     print('computing rolling mean 10 min')
-    data_roll_mean_10m = pandas.rolling_mean(data_all.iloc[7::8, SKIPFEATURES:], window=TENMINUTES, center=True)
+    data_roll_mean_10m = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=TENMINUTES, center=True).mean()
 
     print('computing rolling mean 1 hour')
-    data_roll_mean_1h = pandas.rolling_mean(data_all.iloc[7::8, SKIPFEATURES:], window=HOUR, center=True)
+    data_roll_mean_1h = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=HOUR, center=True).mean()
 
     print('computing rolling mean 1 day')
-    data_roll_mean_1d = pandas.rolling_mean(data_all.iloc[7::8, SKIPFEATURES:], window=DAY, center=True)
+    data_roll_mean_1d = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=DAY, center=True).mean()
 
     print('computing rolling std 1 min')
-    data_roll_std_1m = pandas.rolling_mean(data_all.iloc[7::8, SKIPFEATURES:], window=MINUTE, center=True)
+    data_roll_std_1m = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=MINUTE, center=True).mean()
 
     print('computing rolling std 10 min')
-    data_roll_std_10m = pandas.rolling_std(data_all.iloc[7::8, SKIPFEATURES:], window=TENMINUTES, center=True)
+    data_roll_std_10m = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=TENMINUTES, center=True).std()
 
     print('computing rolling std 1 hour')
-    data_roll_std_1h = pandas.rolling_std(data_all.iloc[7::8, SKIPFEATURES:], window=HOUR, center=True)
+    data_roll_std_1h = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=HOUR, center=True).std()
 
     print('computing rolling std 1 day')
-    data_roll_std_1d = pandas.rolling_std(data_all.iloc[7::8, SKIPFEATURES:], window=DAY, center=True)
+    data_roll_std_1d = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=DAY, center=True).std()
 
     print('computing past diff')
     past_diff_feat = np.hstack([data_diff.iloc[i::8, :].values for i in range(1,8)])
@@ -97,9 +97,6 @@ for stage in ('train', 'test'):
     entropy_feat = data_all.ix[7::8, ['bid_entropy_1', 'ask_entropy_1']]
 
     print('create train/testset')
-    #data=np.c_[past_diff_feat, pres_orig_feat, time_feat]
-    #data=np.c_[pres_orig_feat, time_feat]
-    #data=pres_orig_feat
     data=np.c_[past_diff_feat, fut_diff_feat, pres_orig_feat, time_feat, data_roll_mean_1m, data_roll_mean_10m, data_roll_mean_1h, data_roll_mean_1d, data_roll_std_1m, data_roll_std_10m, data_roll_std_1h, data_roll_std_1d]
 
     print('data shape: %s' % repr(data.shape))
@@ -125,7 +122,6 @@ params['min_child_weight'] = 4
 params['objective'] = 'binary:logistic'
 params['nthread'] = 4
 params['eval_metric'] = 'error'
-params['learning_rate'] = 0.1
 params['lambda'] = 0.1
 params['base_score'] = prior
 
