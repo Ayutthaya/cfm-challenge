@@ -50,7 +50,7 @@ for stage in ('train', 'test'):
     data_diff = data_all.iloc[:, SKIPFEATURES:].diff()
 
     print('compressing dataset')
-    data_compressed = data_all[data_all['offset']>=500 & data_all['offset']==0]
+    data_compressed = data_all[data_all['offset']<=-500 & data_all['offset']==0]
 
     print('computing compressed diff')
     data_diff = data_compressed.iloc[:, SKIPFEATURES:].diff()
