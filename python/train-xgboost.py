@@ -50,28 +50,28 @@ for stage in ('train', 'test'):
     data_diff = data_all.iloc[:, SKIPFEATURES:].diff()
 
     print('computing rolling mean 1 min')
-    data_roll_mean_1m = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=MINUTE, center=True).mean()
+    data_roll_mean_1m = data_all.iloc[7::8, SKIPFEATURES:].rolling(window=MINUTE, center=True).mean()
 
     print('computing rolling mean 10 min')
-    data_roll_mean_10m = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=TENMINUTES, center=True).mean()
+    data_roll_mean_10m = data_all.iloc[7::8, SKIPFEATURES:].rolling(window=TENMINUTES, center=True).mean()
 
     print('computing rolling mean 1 hour')
-    data_roll_mean_1h = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=HOUR, center=True).mean()
+    data_roll_mean_1h = data_all.iloc[7::8, SKIPFEATURES:].rolling(window=HOUR, center=True).mean()
 
     print('computing rolling mean 1 day')
-    data_roll_mean_1d = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=DAY, center=True).mean()
+    data_roll_mean_1d = data_all.iloc[7::8, SKIPFEATURES:].rolling(window=DAY, center=True).mean()
 
     print('computing rolling std 1 min')
-    data_roll_std_1m = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=MINUTE, center=True).mean()
+    data_roll_std_1m = data_all.iloc[7::8, SKIPFEATURES:].rolling(window=MINUTE, center=True).std()
 
     print('computing rolling std 10 min')
-    data_roll_std_10m = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=TENMINUTES, center=True).std()
+    data_roll_std_10m = data_all.iloc[7::8, SKIPFEATURES:].rolling(window=TENMINUTES, center=True).std()
 
     print('computing rolling std 1 hour')
-    data_roll_std_1h = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=HOUR, center=True).std()
+    data_roll_std_1h = data_all.iloc[7::8, SKIPFEATURES:].rolling(window=HOUR, center=True).std()
 
     print('computing rolling std 1 day')
-    data_roll_std_1d = pandas.rolling(data_all.iloc[7::8, SKIPFEATURES:], window=DAY, center=True).std()
+    data_roll_std_1d = data_all.iloc[7::8, SKIPFEATURES:].rolling(window=DAY, center=True).std()
 
     print('computing past diff')
     past_diff_feat = np.hstack([data_diff.iloc[i::8, :].values for i in range(1,8)])
