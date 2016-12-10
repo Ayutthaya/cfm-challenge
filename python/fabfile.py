@@ -11,7 +11,5 @@ def prepare(data_path=None):
 
 def upload(data_path):
     print('data_path: %s' % data_path)
-    run('mkdir -p data')
-    put(data_path, '~/data/')
-    with cd('data'):
-        run('for file in ./*.zip; do unzip $file; done')
+    put(data_path, '~/')
+    run('tar -xzf data.tar.gz')

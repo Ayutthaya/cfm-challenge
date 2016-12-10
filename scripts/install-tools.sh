@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# install unzip
-sudo apt-get -qq -y install unzip
-
 # install recent libgcc
 ~/anaconda3/bin/conda install libgcc
 
