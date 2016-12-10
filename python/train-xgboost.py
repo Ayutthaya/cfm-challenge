@@ -119,7 +119,7 @@ dtrain = xgb.DMatrix(data=np.load(TRAINPICKLE+'.npy'), label = label)
 print('setting up params')
 prior=label.mean()
 params={}
-params['bst:eta'] = 0.1
+params['learning_rate'] = 0.1
 params['bst:max_depth'] = 10
 params['min_child_weight'] = 4
 params['objective'] = 'binary:logistic'
