@@ -3,6 +3,7 @@
 import numpy as np
 import pandas
 import xgboost as xgb
+import gc
 
 
 TRAINFILE='/home/ubuntu/data/training_input.csv'
@@ -82,7 +83,7 @@ for stage in ('train', 'test'):
     print('computing pres orig')
     pres_orig_feat = data_all.iloc[7::8, SKIPFEATURES:].values
 
-    print('comuting past orig')
+    print('computing past orig')
     past_orig_feat = np.hstack([data_all.iloc[i::8, 1:len(USEFEATURES)].values for i in range(8)])
 
     print('computing time feature')
@@ -104,6 +105,10 @@ for stage in ('train', 'test'):
         np.save(TRAINPICKLE, data, allow_pickle=True)
     else:
         np.save(TESTPICKLE, data, allow_pickle=True)
+
+#free memory
+print('free memory')
+gc.collect()
 
 print('loading label')
 label = pandas.read_csv(LABELFILE, sep=';')['TARGET'].values
