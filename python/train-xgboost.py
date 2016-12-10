@@ -88,12 +88,12 @@ for stage in ('train', 'test'):
     fut_diff_feat = np.r_[fut_diff_feat, np.zeros((1, fut_diff_feat.shape[1]))]
 
     print('computing past diff compressed')
-    past_diff_feat_compressed = np.hstack([data_diff.iloc[i::8, :].values for i in range(1,3)])
+    past_diff_feat_compressed = np.hstack([data_diff.iloc[i::3, :].values for i in range(1,3)])
 
     print('computing fut diff compressed')
-    fut_diff_feat_compressed = np.hstack([data_diff.iloc[i+7::8, :].values for i in range(1,4)])
+    fut_diff_feat_compressed = np.hstack([data_diff.iloc[i+2::3, :].values for i in range(1,4)])
     # fix end
-    fut_diff_feat_compressed = np.r_[fut_diff_feat_compressed, np.zeros((1, fut_diff_feat.shape[1]))]
+    fut_diff_feat_compressed = np.r_[fut_diff_feat_compressed, np.zeros((1, fut_diff_feat_compressed.shape[1]))]
 
     print('computing pres orig')
     pres_orig_feat = data_all.iloc[7::8, SKIPFEATURES:].values
