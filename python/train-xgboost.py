@@ -6,8 +6,7 @@ import xgboost as xgb
 import gc
 
 
-#DATADIR='/home/ubuntu/data/'
-DATADIR='/home/nath/Projects/challenge-cfm/data/'
+DATADIR='/home/ubuntu/data/'
 TRAINFILE=DATADIR+'training_input.csv'
 TESTFILE=DATADIR+'testing_input.csv'
 LABELFILE=DATADIR+'challenge_output_data_training_file_prediction_of_trading_activity_within_the_order_book.csv'
@@ -15,7 +14,10 @@ LABELFILE=DATADIR+'challenge_output_data_training_file_prediction_of_trading_act
 TRAINPICKLE='train.pkl'
 TESTPICKLE='test.pkl'
 
-MODELNAME='01.model'
+RESULTSDIR='results/'
+PROBASFILE=RESULTSDIR+'probas.csv'
+PREDICTIONSFILE=RESULTSDIR+'predictions.csv'
+MODELFILE=RESULTSDIR+'xgboost.model'
 
 CHUNKSIZE=8
 NCHUNKS=10
@@ -52,7 +54,7 @@ for stage in ('train', 'test'):
 
     if COMPRESSION:
         print('computing diff using compression')
-        data_diff = data_all.ix[(data_all['offset']<=-500) & (data_all['offset']==0), SKIPFEATURES:].diff()
+        data_diff = data_all.ix[(data_all['offset']<=-500) | (data_all['offset']==0), SKIPFEATURES:].diff()
         n_samples_per_epoch = 3
 
     else:
@@ -61,10 +63,10 @@ for stage in ('train', 'test'):
         n_samples_per_epoch = 8
 
     print('computing rolling mean')
-    data_roll_mean = np.hstack([data_all.iloc[7::8, SKIPFEATURES].rolling(window=window, center=True).mean() for window in [MINUTE, TENMINUTES, HOUR, DAY]])
+    data_roll_mean = np.hstack([data_all.iloc[7::8, SKIPFEATURES:].rolling(window=window, center=True).mean() for window in [MINUTE, TENMINUTES, HOUR, DAY]])
 
     print('computing rolling std')
-    data_roll_std = np.hstack([data_all.iloc[7::8, SKIPFEATURES].rolling(window=window, center=True).std() for window in [MINUTE, TENMINUTES, HOUR, DAY]])
+    data_roll_std = np.hstack([data_all.iloc[7::8, SKIPFEATURES:].rolling(window=window, center=True).std() for window in [MINUTE, TENMINUTES, HOUR, DAY]])
 
     print('computing past diff')
     past_diff_feat = np.hstack([data_diff.iloc[i::n_samples_per_epoch, :].values for i in range(1,n_samples_per_epoch)])
@@ -107,7 +109,7 @@ print('free memory')
 gc.collect()
 
 print('loading label')
-label = pandas.read_csv(LABELFILE, sep=';')['TARGET'].values
+label = pandas.read_csv(LABELFILE, sep=';', nrows=NCHUNKS)['TARGET'].values
 
 print('loading dtrain')
 dtrain = xgb.DMatrix(data=np.load(TRAINPICKLE+'.npy'), label = label)
@@ -135,14 +137,20 @@ num_round=150
 bst = xgb.train(params, dtrain, num_round)
 
 print('saving model')
-bst.save_model(MODELNAME)
+bst.save_model(MODELFILE)
 
 print('loading dtest')
 dtest = xgb.DMatrix(data=np.load(TESTPICKLE+'.npy'))
 
-print('computing predictions')
-y_pred_test=np.round(bst.predict(dtest)).astype('int')
+print('computing probas')
+probas = bst.predict(dtest)
+
+print('rounding predictions')
+predictions=np.round(probas).astype('int')
+
+print('saving probas')
+n_samples = probas.shape[0]
+pandas.DataFrame({'ID': np.arange(1, n_samples+1), 'PROBAS': probas}).to_csv(PROBASFILE, index=False)
 
 print('saving predictions')
-n_samples = y_pred_test.shape[0]
-pandas.DataFrame({'ID': np.arange(1, n_samples+1), 'TARGET': y_pred_test}).to_csv('/tmp/pred.csv', sep=';', index=False)
+pandas.DataFrame({'ID': np.arange(1, n_samples+1), 'TARGET': predictions}).to_csv(PREDICTIONSFILE, sep=';', index=False)

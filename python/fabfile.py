@@ -13,3 +13,12 @@ def upload(data_path):
     print('data_path: %s' % data_path)
     put(data_path, '~/')
     run('tar -xzf data.tar.gz')
+    run_model()
+
+def run_model():
+    with path('~/anaconda3/bin'):
+        run('mkdir -p results')
+        run('cp data-exploration-tools/python/train-xgboost.py results/')
+        run('python data-exploration-tools/python/train-xgboost.py')
+        run('tar -czf results-$(date)-$(hostname).tar.gz results')
+    get('results*tar.gz')
