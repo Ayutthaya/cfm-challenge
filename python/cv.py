@@ -20,7 +20,6 @@ NCHUNKS=10
 
 print('loading label')
 label = pandas.read_csv(LABELFILE, sep=';', nrows=NCHUNKS)['TARGET'].values
-print(label.shape)
 
 print('loading dtrain')
 dtrain = xgb.DMatrix(data=np.load(TRAINPICKLE+'.npy'), label = label)
