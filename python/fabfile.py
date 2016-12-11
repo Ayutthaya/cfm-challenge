@@ -29,7 +29,7 @@ def run_cv(branch='master'):
         run('git fetch origin')
         run('git checkout origin/'+branch)
     run('mkdir -p results')
-    run('cp data-exploration-tools/python/train-xgboost.py results/')
+    run('cp data-exploration-tools/python/cv.py results/')
     run('~/anaconda3/bin/python -u data-exploration-tools/python/cv.py &> results/logs.txt')
     compute_predictions(branch)
 
@@ -38,7 +38,7 @@ def compute_predictions(branch='master'):
         run('git fetch origin')
         run('git checkout origin/'+branch)
     run('mkdir -p results')
-    run('cp data-exploration-tools/python/train-xgboost.py results/')
+    run('cp data-exploration-tools/python/predictions.py results/')
     run('~/anaconda3/bin/python -u data-exploration-tools/python/predictions.py')
     download_results()
 
