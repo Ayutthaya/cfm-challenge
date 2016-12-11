@@ -24,6 +24,6 @@ def run_model(branch):
     run('cp data-exploration-tools/python/feature-engineering.py results/')
     run('~/anaconda3/bin/python data-exploration-tools/python/feature-engineering.py')
     run('cp data-exploration-tools/python/train-xgboost.py results/')
-    run('~/anaconda3/bin/python data-exploration-tools/python/train-xgboost.py')
+    run('~/anaconda3/bin/python -u data-exploration-tools/python/train-xgboost.py &> results/logs.txt')
     run('tar -czf results-$(date +%Y-%m-%d-%H-%M-%S)-$(hostname).tar.gz results')
     get('results*tar.gz')
