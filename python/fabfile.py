@@ -18,7 +18,7 @@ def upload(data_path, branch=None):
 
 def run_model(branch):
     with cd('data-exploration-tools'):
-        run('git pull origin master')
+        run('git pull origin '+branch)
     run('mkdir -p results')
     run('cp data-exploration-tools/python/feature-engineering.py results/')
     run('~/anaconda3/bin/python data-exploration-tools/python/feature-engineering.py')
