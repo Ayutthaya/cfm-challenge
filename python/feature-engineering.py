@@ -29,15 +29,15 @@ SKIPIDANDOFFSET=2
 SKIPFEATURES = 5
 NEWFEATURES = ['spread', 'bid_plus_ask', 'bid_pct']
 
-COMPRESSION=True
+COMPRESSION=False
 
 for stage in ('train', 'test'):
 
     print('loading data')
     if stage=='train':
-        data_all = pandas.read_csv(TRAINFILE, usecols=USEFEATURES)
+        data_all = pandas.read_csv(TRAINFILE, usecols=USEFEATURES, nrows=NCHUNKS*CHUNKSIZE)
     else:
-        data_all = pandas.read_csv(TESTFILE, usecols=USEFEATURES)
+        data_all = pandas.read_csv(TESTFILE, usecols=USEFEATURES, nrows=NCHUNKS*CHUNKSIZE)
 
     print('creating new features')
     data_all['spread'] = data_all['ask_1']-data_all['bid_1']
