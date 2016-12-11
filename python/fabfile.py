@@ -20,5 +20,7 @@ def run_model():
         run('mkdir -p results')
         run('cp data-exploration-tools/python/train-xgboost.py results/')
         run('python data-exploration-tools/python/train-xgboost.py')
+        run('cp data-exploration-tools/python/feature-engineering.py results/')
+        run('python data-exploration-tools/python/feature-engineering.py')
         run('tar -czf results-$(date)-$(hostname).tar.gz results')
     get('results*tar.gz')
