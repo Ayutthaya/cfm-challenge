@@ -35,9 +35,9 @@ for stage in ('train', 'test'):
 
     print('loading data')
     if stage=='train':
-        data_all = pandas.read_csv(TRAINFILE, usecols=USEFEATURES, nrows=NCHUNKS*CHUNKSIZE)
+        data_all = pandas.read_csv(TRAINFILE, usecols=USEFEATURES)
     else:
-        data_all = pandas.read_csv(TESTFILE, usecols=USEFEATURES, nrows=NCHUNKS*CHUNKSIZE)
+        data_all = pandas.read_csv(TESTFILE, usecols=USEFEATURES)
 
     print('creating new features')
     data_all['spread'] = data_all['ask_1']-data_all['bid_1']
