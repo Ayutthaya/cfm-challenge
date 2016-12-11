@@ -12,7 +12,7 @@ chmod +x Anaconda3-4.2.0-Linux-x86_64.sh
 sudo echo "export PATH=\$HOME/anaconda3/bin:\$PATH" >> ~/.bashrc
 
 # install recent libgcc
-~/anaconda3/bin/conda install libgcc
+~/anaconda3/bin/conda install -q -y libgcc
 
 # install xgboost
 sudo apt-get update

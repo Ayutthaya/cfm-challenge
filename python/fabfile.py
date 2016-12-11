@@ -16,11 +16,12 @@ def upload(data_path):
     run_model()
 
 def run_model():
-    with path('~/anaconda3/bin'):
-        run('mkdir -p results')
-        run('cp data-exploration-tools/python/train-xgboost.py results/')
-        run('python data-exploration-tools/python/train-xgboost.py')
-        run('cp data-exploration-tools/python/feature-engineering.py results/')
-        run('python data-exploration-tools/python/feature-engineering.py')
-        run('tar -czf results-$(date)-$(hostname).tar.gz results')
+    with cd('data-exploration-tools'):
+        run('git pull origin master')
+    run('mkdir -p results')
+    run('cp data-exploration-tools/python/feature-engineering.py results/')
+    run('~/anaconda3/bin/python data-exploration-tools/python/feature-engineering.py')
+    run('cp data-exploration-tools/python/train-xgboost.py results/')
+    run('~/anaconda3/bin/python data-exploration-tools/python/train-xgboost.py')
+    run('tar -czf results-$(date +%Y-%m-%d-%H-%M-%S)-$(hostname).tar.gz results')
     get('results*tar.gz')
