@@ -10,6 +10,7 @@ LABELFILE=DATADIR+'challenge_output_data_training_file_prediction_of_trading_act
 
 TRAINPICKLE='train.pkl'
 TESTPICKLE='test.pkl'
+FEATURENAMEFILE='featurenamefile.txt'
 
 CHUNKSIZE=8
 NCHUNKS=10
@@ -89,6 +90,20 @@ for stage in ('train', 'test'):
     data=np.c_[past_diff_feat, fut_diff_feat, pres_orig_feat, time_feat, data_roll_mean, data_roll_std]
 
     print('data shape: %s' % repr(data.shape))
+
+    BASEFEATURES = USEFEATURES[:SKIPFEATURES]
+ 
+    past_diff_feat_names = ['past_diff_' + featurename+'_' + str(offset) for offset in range(7) for featurename in BASEFEATURES]
+    future_diff_feat_names = ['fut_diff_' + featurename+'_'+ str(offset) for offset in range(8) for featurename in BASEFEATURES]
+    pres_orig_feat_names = ['pres_orig_' + featurename for featurename in BASEFEATURES]
+    time_feat_names = ['time']
+    data_roll_mean_names = ['data_roll_mean_' + featurename + '_' + window + for featurename in BASEFEATURES for window in ('minute', 'tenminutes', 'hour', 'day')]
+    data_roll_std_names = ['data_roll_std_' + featurename + '_' + window + for featurename in BASEFEATURES for window in ('minute', 'tenminutes', 'hour', 'day')]
+
+    with open(FEATURENAMEFILE, 'w') as featurenamefile:
+        for featurelist in (past_diff_feat_names, future_diff_feat_names, pres_orig_feat_names, time_feat_names, data_roll_std_names):
+            for featurename in featurelist:
+                featurenamefile.write(featurename + '\n')
 
     print('save train/testset')
     if stage=='train':
