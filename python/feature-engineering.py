@@ -91,7 +91,7 @@ for stage in ('train', 'test'):
 
     print('data shape: %s' % repr(data.shape))
 
-    BASEFEATURES = USEFEATURES[SKIPFEATURES:]
+    BASEFEATURES = USEFEATURES[SKIPFEATURES:] + NEWFEATURES
     
     past_diff_feat_names = ['past_diff_' + featurename+'_' + str(offset) for offset in range(7) for featurename in BASEFEATURES]
     future_diff_feat_names = ['fut_diff_' + featurename+'_'+ str(offset) for offset in range(8) for featurename in BASEFEATURES]
