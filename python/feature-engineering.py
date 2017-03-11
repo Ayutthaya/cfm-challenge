@@ -101,7 +101,7 @@ for stage in ('train', 'test'):
     data_roll_std_names = ['data_roll_std_' + featurename + '_' + window for window in ('minute', 'tenminutes', 'hour', 'day') for featurename in BASEFEATURES]
 
     with open(FEATURENAMEFILE, 'w') as featurenamefile:
-        for featurelist in (past_diff_feat_names, future_diff_feat_names, pres_orig_feat_names, time_feat_names, data_roll_std_names):
+        for featurelist in (past_diff_feat_names, future_diff_feat_names, pres_orig_feat_names, time_feat_names, data_roll_mean_names, data_roll_std_names):
             for featurename in featurelist:
                 featurenamefile.write(featurename + '\n')
 
