@@ -48,8 +48,7 @@ bst = xgb.train(params, dtrain, num_round)
 
 print('save fscore')
 fscore = bst.get_fscore()
-fscore = sorted(fscore.items(), key=operator.itemgetter(1))
-fscore_df = pandas.DataFrame(fscore, columns=['feature', 'fscore'])
+fscore_df = pandas.DataFrame(list(fscore.items()), columns=['feature', 'fscore'])
 fscore_df.to_csv(FSCOREFILE)
 
 print('saving model')
