@@ -43,13 +43,13 @@ params['lambda'] = 0.1
 params['base_score'] = prior
 
 print('training model')
-num_round=300
+num_round=50
 bst = xgb.train(params, dtrain, num_round)
 
 print('save fscore')
 fscore = bst.get_fscore()
-fscore = sorted(importance.items(), key=operator.itemgetter(1))
-fscore_df = pandas.DataFrame(importance, columns=['feature', 'fscore'])
+fscore = sorted(fscore.items(), key=operator.itemgetter(1))
+fscore_df = pandas.DataFrame(fscore, columns=['feature', 'fscore'])
 fscore_df.to_csv(FSCOREFILE)
 
 print('saving model')
