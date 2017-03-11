@@ -22,7 +22,7 @@ NCHUNKS=10
 
 print('reading feature names')
 with open(FEATURENAMEFILE) as featurenamefile:
-    feature_names = list(featurenamefile)
+    feature_names = [x.strip() for x in list(featurenamefile)]
 
 print('loading label')
 label = pandas.read_csv(LABELFILE, sep=';')['TARGET'].values
