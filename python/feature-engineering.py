@@ -26,8 +26,8 @@ DAY=4679
 HALFDAY=2239
 
 SKIPIDANDOFFSET=2
-SKIPFEATURES = 5
-NEWFEATURES = ['spread', 'bid_plus_ask', 'bid_pct']
+SKIPFEATURES = 2
+NEWFEATURES = ['spread', 'bid_plus_ask', 'bid_pct', 'emid', 'omid']
 
 COMPRESSION=False
 
@@ -44,6 +44,14 @@ for stage in ('train', 'test'):
     data_all['bid_plus_ask'] = data_all['bid_size_1']-data_all['ask_size_1']
     data_all['bid_pct'] = data_all['bid_size_1']/data_all['bid_plus_ask']
 
+    data_all['eff_bid'] = data_all['bid_1']*data_all['bid_size_1'] + (data_all['bid_1'] - 1)*data_all['bid_size_2']
+    data_all['eff_bid'] /= data_all['bid_size_1'] + data_all['bid_size_2']
+    data_all['eff_ask'] = data_all['ask_1']*data_all['ask_size_1'] + (data_all['ask_1'] + 1)*data_all['ask_size_2']
+    data_all['eff_ask'] /= data_all['ask_size_1'] + data_all['ask_size_2']
+    data_all['emid'] = (data_all['eff_bid'] + data_all['eff_ask'])/2
+
+    data_all['omid'] = data_all['bid_1']*(1-data_all['bid_pct']) + data_all['ask_1']*data_all['bid_pct']
+
     if COMPRESSION:
         print('computing diff using compression')
         data_diff = data_all.ix[(data_all['offset']<=-500) | (data_all['offset']==0), SKIPFEATURES:].diff()
@@ -57,8 +65,17 @@ for stage in ('train', 'test'):
     print('computing rolling mean')
     data_roll_mean = np.hstack([data_all.iloc[7::8, SKIPFEATURES:].rolling(window=window, center=True).mean() for window in [MINUTE, TENMINUTES, HOUR, DAY]])
 
+    print('computing rolling trend')
+    data_roll_trend = np.hstack([data_all.iloc[7::8, SKIPFEATURES:].rolling(window=window, center=True).mean() - data_all[7::8, SKIPFEATURES] for window in [MINUTE, TENMINUTES, HOUR, DAY]]) 
+
     print('computing rolling std')
     data_roll_std = np.hstack([data_all.iloc[7::8, SKIPFEATURES:].rolling(window=window, center=True).std() for window in [MINUTE, TENMINUTES, HOUR, DAY]])
+
+    print('computing local trend')
+    data_local_trend = data_all.iloc[:, SKIPFEATURES:].rolling(window=8).mean()[7::8] - data_all[7::8]
+
+    print('computing local std')
+    data_local_trend = data_all.iloc[:, SKIPFEATURES:].rolling(window=8).std()[7::8]
 
     print('computing past diff')
     past_diff_feat = np.hstack([data_diff.iloc[i::n_samples_per_epoch, :].values for i in range(1,n_samples_per_epoch)])
