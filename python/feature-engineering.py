@@ -92,13 +92,13 @@ for stage in ('train', 'test'):
     print('data shape: %s' % repr(data.shape))
 
     BASEFEATURES = USEFEATURES[:SKIPFEATURES]
- 
+    
     past_diff_feat_names = ['past_diff_' + featurename+'_' + str(offset) for offset in range(7) for featurename in BASEFEATURES]
     future_diff_feat_names = ['fut_diff_' + featurename+'_'+ str(offset) for offset in range(8) for featurename in BASEFEATURES]
     pres_orig_feat_names = ['pres_orig_' + featurename for featurename in BASEFEATURES]
     time_feat_names = ['time']
-    data_roll_mean_names = ['data_roll_mean_' + featurename + '_' + window + for featurename in BASEFEATURES for window in ('minute', 'tenminutes', 'hour', 'day')]
-    data_roll_std_names = ['data_roll_std_' + featurename + '_' + window + for featurename in BASEFEATURES for window in ('minute', 'tenminutes', 'hour', 'day')]
+    data_roll_mean_names = ['data_roll_mean_' + featurename + '_' + window for featurename in BASEFEATURES for window in ('minute', 'tenminutes', 'hour', 'day')]
+    data_roll_std_names = ['data_roll_std_' + featurename + '_' + window for featurename in BASEFEATURES for window in ('minute', 'tenminutes', 'hour', 'day')]
 
     with open(FEATURENAMEFILE, 'w') as featurenamefile:
         for featurelist in (past_diff_feat_names, future_diff_feat_names, pres_orig_feat_names, time_feat_names, data_roll_std_names):
