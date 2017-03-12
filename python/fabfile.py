@@ -2,7 +2,7 @@ from fabric.api import *
 
 GITHUBURL='https://github.com/Ayutthaya/data-exploration-tools.git'
 
-def synchronize_tools():
+def synchronize_tools(branch):
     with cd('data-exploration-tools'):
         run('git fetch origin')
         run('git checkout origin/'+branch)
@@ -21,21 +21,21 @@ def upload(data_path, branch='master'):
     run_feature_engineering(branch)
 
 def run_feature_engineering(branch='master'):
-    synchronize_tools()
+    synchronize_tools(branch)
     run('mkdir -p results')
     run('cp data-exploration-tools/python/feature-engineering.py results/')
     run('~/anaconda3/bin/python data-exploration-tools/python/feature-engineering.py')
     run_cv(branch)
 
 def run_cv(branch='master'):
-    synchronize_tools()
+    synchronize_tools(branch)
     run('mkdir -p results')
     run('cp data-exploration-tools/python/cv.py results/')
     run('~/anaconda3/bin/python -u data-exploration-tools/python/cv.py &> results/logs.txt')
     compute_predictions(branch)
 
 def compute_predictions(branch='master'):
-    synchronize_tools()
+    synchronize_tools(branch)
     run('mkdir -p results')
     run('~/anaconda3/bin/python -u data-exploration-tools/python/predictions.py')
     run('cp data-exploration-tools/python/* results/*py')
