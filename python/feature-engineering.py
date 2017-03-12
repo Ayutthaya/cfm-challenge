@@ -64,6 +64,7 @@ for stage in ('train', 'test'):
 
     print('data shape: %s' % repr(data.shape))
 
+    print('create feature names')
     BASEFEATURES = USEFEATURES[SKIPFEATURES:] + NEWFEATURES
     
     past_diff_feat_names = ['past_diff_' + featurename+'_' + str(offset) for offset in range(7) for featurename in BASEFEATURES]
@@ -73,6 +74,7 @@ for stage in ('train', 'test'):
     data_roll_mean_names = ['data_roll_mean_' + featurename + '_' + window for window in ('minute', 'tenminutes', 'hour', 'day') for featurename in BASEFEATURES]
     data_roll_std_names = ['data_roll_std_' + featurename + '_' + window for window in ('minute', 'tenminutes', 'hour', 'day') for featurename in BASEFEATURES]
 
+    print('save feature names')
     with open(FEATURENAMEFILE, 'w') as featurenamefile:
         for featurelist in (past_diff_feat_names, future_diff_feat_names, pres_orig_feat_names, time_feat_names, data_roll_mean_names, data_roll_std_names):
             for featurename in featurelist:
