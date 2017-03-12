@@ -4,21 +4,7 @@ import numpy as np
 import pandas
 import xgboost as xgb
 
-DATADIR='/home/ubuntu/data/'
-LABELFILE=DATADIR+'challenge_output_data_training_file_prediction_of_trading_activity_within_the_order_book.csv'
-
-TRAINPICKLE='train.pkl'
-TESTPICKLE='test.pkl'
-FEATURENAMEFILE='featurenamefile.txt'
-
-RESULTSDIR='results/'
-PROBASFILE=RESULTSDIR+'probas.csv'
-PREDICTIONSFILE=RESULTSDIR+'predictions.csv'
-MODELFILE=RESULTSDIR+'xgboost.model'
-FSCOREFILE=RESULTSDIR+'fscore.csv'
-
-CHUNKSIZE=8
-NCHUNKS=10
+from configuration import *
 
 print('reading feature names')
 with open(FEATURENAMEFILE) as featurenamefile:
@@ -32,19 +18,10 @@ dtrain = xgb.DMatrix(data=np.load(TRAINPICKLE+'.npy'), feature_names = feature_n
 
 print('setting up params')
 prior=label.mean()
-params={}
-params['learning_rate'] = 0.1
-params['bst:max_depth'] = 10
-params['min_child_weight'] = 4
-params['objective'] = 'binary:logistic'
-params['nthread'] = 4
-params['eval_metric'] = 'error'
-params['lambda'] = 0.1
 params['base_score'] = prior
 
 print('training model')
-num_round=50
-bst = xgb.train(params, dtrain, num_round)
+bst = xgb.train(params, dtrain, num_boost_round_pred)
 
 print('save fscore')
 fscore = bst.get_fscore()

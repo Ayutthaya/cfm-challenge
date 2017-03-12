@@ -38,8 +38,7 @@ def compute_predictions(branch='master'):
         run('git fetch origin')
         run('git checkout origin/'+branch)
     run('mkdir -p results')
-    run('cp data-exploration-tools/python/predictions.py results/')
-    run('~/anaconda3/bin/python -u data-exploration-tools/python/predictions.py')
+    run('cp data-exploration-tools/python/* results/')
     download_results()
 
 def download_results():
