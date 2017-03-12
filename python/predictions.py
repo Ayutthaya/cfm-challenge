@@ -55,7 +55,7 @@ print('saving model')
 bst.save_model(MODELFILE)
 
 print('loading dtest')
-dtest = xgb.DMatrix(data=np.load(TESTPICKLE+'.npy'))
+dtest = xgb.DMatrix(data=np.load(TESTPICKLE+'.npy'), feature_names = feature_names)
 
 print('computing probas')
 probas = bst.predict(dtest)
