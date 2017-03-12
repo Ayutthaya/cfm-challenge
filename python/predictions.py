@@ -4,47 +4,35 @@ import numpy as np
 import pandas
 import xgboost as xgb
 
-DATADIR='/home/ubuntu/data/'
-LABELFILE=DATADIR+'challenge_output_data_training_file_prediction_of_trading_activity_within_the_order_book.csv'
+from configuration import *
 
-TRAINPICKLE='train.pkl'
-TESTPICKLE='test.pkl'
-
-RESULTSDIR='results/'
-PROBASFILE=RESULTSDIR+'probas.csv'
-PREDICTIONSFILE=RESULTSDIR+'predictions.csv'
-MODELFILE=RESULTSDIR+'xgboost.model'
-
-CHUNKSIZE=8
-NCHUNKS=10
+print('reading feature names')
+with open(FEATURENAMEFILE) as featurenamefile:
+    feature_names = [x.strip() for x in list(featurenamefile)]
 
 print('loading label')
 label = pandas.read_csv(LABELFILE, sep=';')['TARGET'].values
 
 print('loading dtrain')
-dtrain = xgb.DMatrix(data=np.load(TRAINPICKLE+'.npy'), label = label)
+dtrain = xgb.DMatrix(data=np.load(TRAINPICKLE+'.npy'), feature_names = feature_names, label = label)
 
 print('setting up params')
 prior=label.mean()
-params={}
-params['learning_rate'] = 0.1
-params['bst:max_depth'] = 10
-params['min_child_weight'] = 4
-params['objective'] = 'binary:logistic'
-params['nthread'] = 4
-params['eval_metric'] = 'error'
-params['lambda'] = 0.1
 params['base_score'] = prior
 
 print('training model')
-num_round=300
-bst = xgb.train(params, dtrain, num_round)
+bst = xgb.train(params, dtrain, num_boost_round_pred)
+
+print('save fscore')
+fscore = bst.get_fscore()
+fscore_df = pandas.DataFrame(list(fscore.items()), columns=['feature', 'fscore'])
+fscore_df.to_csv(FSCOREFILE)
 
 print('saving model')
 bst.save_model(MODELFILE)
 
 print('loading dtest')
-dtest = xgb.DMatrix(data=np.load(TESTPICKLE+'.npy'))
+dtest = xgb.DMatrix(data=np.load(TESTPICKLE+'.npy'), feature_names = feature_names)
 
 print('computing probas')
 probas = bst.predict(dtest)

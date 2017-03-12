@@ -3,33 +3,7 @@
 import numpy as np
 import pandas
 
-DATADIR='/home/ubuntu/data/'
-TRAINFILE=DATADIR+'training_input.csv'
-TESTFILE=DATADIR+'testing_input.csv'
-LABELFILE=DATADIR+'challenge_output_data_training_file_prediction_of_trading_activity_within_the_order_book.csv'
-
-TRAINPICKLE='train.pkl'
-TESTPICKLE='test.pkl'
-
-CHUNKSIZE=8
-NCHUNKS=10
-LASTROW=7
-
-MINUTE=8
-TENMINUTES=78
-HOUR=470
-DAY=4679
-HALFDAY=2239
-
-USEFEATURES = ['ID', 'offset', 'ask_1', 'bid_size_1', 'ask_size_1', 'bid_1', 'nb_trade', 'bid_entropy_1', 'ask_entropy_1', 'bid_size_2', 'ask_size_2', 'bid_entry_1', 'ask_entry_1', 'bid_entry_2', 'ask_entry_2']
-DAY=4679
-HALFDAY=2239
-
-SKIPIDANDOFFSET=2
-SKIPFEATURES = 2
-NEWFEATURES = ['spread', 'bid_plus_ask', 'bid_pct', 'emid', 'omid']
-
-COMPRESSION=False
+from configuration import *
 
 for stage in ('train', 'test'):
 
@@ -108,6 +82,22 @@ for stage in ('train', 'test'):
     data=np.c_[past_diff_feat, fut_diff_feat, pres_orig_feat, time_feat, data_roll_mean, data_roll_trend, data_roll_std, data_local_mean, data_local_trend, data_local_std]
 
     print('data shape: %s' % repr(data.shape))
+
+    print('create feature names')
+    BASEFEATURES = USEFEATURES[SKIPFEATURES:] + NEWFEATURES
+    
+    past_diff_feat_names = ['past_diff_' + featurename+'_' + str(offset) for offset in range(7) for featurename in BASEFEATURES]
+    future_diff_feat_names = ['fut_diff_' + featurename+'_'+ str(offset) for offset in range(8) for featurename in BASEFEATURES]
+    pres_orig_feat_names = ['pres_orig_' + featurename for featurename in BASEFEATURES]
+    time_feat_names = ['time']
+    data_roll_mean_names = ['data_roll_mean_' + featurename + '_' + window for window in ('minute', 'tenminutes', 'hour', 'day') for featurename in BASEFEATURES]
+    data_roll_std_names = ['data_roll_std_' + featurename + '_' + window for window in ('minute', 'tenminutes', 'hour', 'day') for featurename in BASEFEATURES]
+
+    print('save feature names')
+    with open(FEATURENAMEFILE, 'w') as featurenamefile:
+        for featurelist in (past_diff_feat_names, future_diff_feat_names, pres_orig_feat_names, time_feat_names, data_roll_mean_names, data_roll_std_names):
+            for featurename in featurelist:
+                featurenamefile.write(featurename + '\n')
 
     print('save train/testset')
     if stage=='train':
