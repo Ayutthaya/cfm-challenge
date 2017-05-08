@@ -38,7 +38,7 @@ def compute_predictions(branch='master'):
     synchronize_tools(branch)
     run('mkdir -p results')
     run('~/anaconda3/bin/python -u data-exploration-tools/python/predictions.py')
-    run('cp data-exploration-tools/python/* results/')
+    run('cp data-exploration-tools/python/*py results/')
     download_results()
 
 def download_results():
