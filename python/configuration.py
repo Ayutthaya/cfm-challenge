@@ -16,26 +16,6 @@ FSCOREFILE=RESULTSDIR+'fscores.txt'
 TRAINPICKLE='train.pkl'
 TESTPICKLE='test.pkl'
 
-CHUNKSIZE=8
-NCHUNKS=10
-LASTROW=7
-
-MINUTE=8
-TENMINUTES=78
-HOUR=470
-DAY=4679
-HALFDAY=2239
-
-USEFEATURES = ['ID', 'offset', 'ask_1', 'bid_size_1', 'ask_size_1', 'bid_1', 'nb_trade', 'bid_entropy_1', 'ask_entropy_1', 'bid_size_2', 'ask_size_2', 'bid_entry_1', 'ask_entry_1', 'bid_entry_2', 'ask_entry_2']
-DAY=4679
-HALFDAY=2239
-
-SKIPIDANDOFFSET=2
-SKIPFEATURES = 5
-NEWFEATURES = ['spread', 'bid_plus_ask', 'bid_pct']
-
-COMPRESSION=False
-
 params={}
 params['learning_rate'] = 0.1
 params['bst:max_depth'] = 10
