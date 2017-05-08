@@ -8,6 +8,7 @@ PROBASFILE=RESULTSDIR+'probas.csv'
 PREDICTIONSFILE=RESULTSDIR+'predictions.csv'
 MODELFILE=RESULTSDIR+'xgboost.model'
 FEATURENAMEFILE=RESULTSDIR+'featurenamefile.txt'
+FSCOREFILE=RESULTSDIR+'fscores.txt'
 
 TRAINPICKLE='train.pkl'
 TESTPICKLE='test.pkl'
