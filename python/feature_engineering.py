@@ -16,6 +16,8 @@ for stage in ('train', 'test'):
 
     print('computing features')
 
+    features = {}
+
     features['two_sided_ema'] = two_sided_ema(data)
 
     #features['3_days_two_sided_ema'] = features['two_sided_ema'] + 0.1 * (day_shift(features['two_sided_ema'], 1) + day_shift(features['two_sided_ema'], -1))
