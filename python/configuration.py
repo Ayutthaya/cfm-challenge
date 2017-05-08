@@ -33,8 +33,8 @@ NEWFEATURES = ['spread', 'bid_plus_ask', 'bid_pct']
 COMPRESSION=False
 
 params={}
-params['learning_rate'] = 0.01
-params['bst:max_depth'] = 3
+params['learning_rate'] = 0.1
+params['bst:max_depth'] = 10
 params['min_child_weight'] = 4
 params['objective'] = 'binary:logistic'
 params['nthread'] = 4
