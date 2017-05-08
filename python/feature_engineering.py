@@ -42,9 +42,9 @@ for stage in ('train', 'test'):
 
     features['bid_epoch_high_low'] = get_epoch_high_low(data, 'bid_1')
 
-    features['bid_left_trend_7'] = np.abs(get_data(data, 'bid_1', 0) - get_rolling(data, 'bid_1', -7, 0))
+    features['bid_left_trend_7'] = np.abs(get_data(data, 'bid_1', 0) - get_rolling(data, 'bid_1', -7, 0).mean())
 
-    features['bid_right_trend_5'] = np.abs(get_data(data, 'bid_1', 0) - get_rolling(data, 'bid_1', 0, 5))
+    features['bid_right_trend_5'] = np.abs(get_data(data, 'bid_1', 0) - get_rolling(data, 'bid_1', 0, 5).mean())
 
     columnlist = []
     namelist = []
