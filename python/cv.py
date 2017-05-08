@@ -10,7 +10,7 @@ print('loading label')
 label = pandas.read_csv(LABELFILE, sep=';')['TARGET'].values
 
 print('loading dtrain')
-dtrain = xgb.DMatrix(data=np.load(TRAINPICKLE+'.npy'), label = label)
+dtrain = xgb.DMatrix(data=np.load(TRAINPICKLE+'.npy').T, label = label)
 
 print('setting up params')
 prior=label.mean()
