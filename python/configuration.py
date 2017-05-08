@@ -1,3 +1,6 @@
+with open('~/.confignumber') as confignumberfile:
+    CONFIGNUMBER = int(list(confignumberfile)[0].strip())
+
 DATADIR='/home/ubuntu/data/'
 TRAINFILE=DATADIR+'training_input.csv'
 TESTFILE=DATADIR+'testing_input.csv'

@@ -7,7 +7,11 @@ def synchronize_tools(branch):
         run('git fetch origin')
         run('git checkout origin/'+branch)
 
-def prepare(data_path=None, branch='master'):
+def setconfignumber(confignumber=0):
+    run('echo ' + str(confignumber) + ' > ~/.confignumber')
+
+def prepare(data_path=None, branch='master', confignumber=0):
+    setconfignumber(confignumber)
     run('git clone '+GITHUBURL)
     with cd('data-exploration-tools/scripts'):
         run('./install-tools.sh')
