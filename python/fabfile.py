@@ -23,8 +23,8 @@ def upload(data_path, branch='master'):
 def run_feature_engineering(branch='master'):
     synchronize_tools(branch)
     run('mkdir -p results')
-    run('cp data-exploration-tools/python/feature-engineering.py results/')
-    run('~/anaconda3/bin/python data-exploration-tools/python/feature-engineering.py')
+    run('cp data-exploration-tools/python/feature_engineering.py results/')
+    run('~/anaconda3/bin/python data-exploration-tools/python/feature_engineering.py')
     run_cv(branch)
 
 def run_cv(branch='master'):
