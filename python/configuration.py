@@ -30,8 +30,8 @@ if CONFIGSTRING == 'default':
     params['lambda'] = 0.1
 
 elif CONFIGSTRING == 'slow':
-    params['learning_rate'] = 0.01
-    params['bst:max_depth'] = 10
+    params['learning_rate'] = 0.05
+    params['bst:max_depth'] = 4
     params['min_child_weight'] = 6
     params['objective'] = 'binary:logistic'
     params['nthread'] = 4
