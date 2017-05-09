@@ -10,9 +10,9 @@ for stage in ('train', 'test'):
 
     print('loading data')
     if stage=='train':
-        data = pandas.read_csv(TRAINFILE, usecols=USEFEATURES)
+        data = pandas.read_csv(TRAINFILE)
     else:
-        data = pandas.read_csv(TESTFILE, usecols=USEFEATURES)
+        data = pandas.read_csv(TESTFILE)
 
     print('computing features')
 
