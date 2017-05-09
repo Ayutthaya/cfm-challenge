@@ -22,23 +22,23 @@ for stage in ('train', 'test'):
 
     #features['3_days_two_sided_ema'] = features['two_sided_ema'] + 0.1 * (day_shift(features['two_sided_ema'], 1) + day_shift(features['two_sided_ema'], -1))
 
-    features['simple_mmp'] = mmp(get_data(data, 'bid_size_1', 0), get_data(data, 'ask_size_1', 0))
+    #features['simple_mmp'] = mmp(get_data(data, 'bid_size_1', 0), get_data(data, 'ask_size_1', 0))
 
-    features['entry_based_mmp'] = mmp(get_data(data, 'bid_entry_1', 0), get_data(data, 'ask_entry_1', 0))
+    #features['entry_based_mmp'] = mmp(get_data(data, 'bid_entry_1', 0), get_data(data, 'ask_entry_1', 0))
 
     for side in ('bid', 'ask'):
         for level in ('1', '2'):
             for type_ in ('size', 'entry'):
                 col = '_'.join([side, type_, level])
-                #features[col + '_open_close_500'] = get_epoch_open_close(data, col, -500)
+                features[col + '_open_close_500'] = get_epoch_open_close(data, col, -500)
                 features[col + '_epoch_std'] = get_epoch_std(data, col)
-                #features[col + '_epoch_high_low'] = get_epoch_high_low(data, col)
+                features[col + '_epoch_high_low'] = get_epoch_high_low(data, col)
 
     features['bid_rolling_std_10'] = get_rolling(data, 'bid_1', -5, 5).std()
 
     features['bid_high_low_10'] = get_rolling(data, 'bid_1', -5, 5).max() - get_rolling(data, 'bid_1', -5, 5).min()
 
-    #features['bid_open_close_10'] = get_open_close(data, 'bid_1', -5, 5)
+    features['bid_open_close_10'] = get_open_close(data, 'bid_1', -5, 5)
 
     features['bid_epoch_high_low'] = get_epoch_high_low(data, 'bid_1')
 
