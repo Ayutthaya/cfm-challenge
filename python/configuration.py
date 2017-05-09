@@ -1,4 +1,6 @@
-with open('~/.configstring') as configstringfile:
+import os
+
+with open(os.path.expanduser('.configstring')) as configstringfile:
     CONFIGSTRING = list(configstringfile)[0].strip()
 
 DATADIR='/home/ubuntu/data/'
