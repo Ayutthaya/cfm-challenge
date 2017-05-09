@@ -51,5 +51,5 @@ elif CONFIGSTRING == 'slower':
     params['eval_metric'] = 'error'
     params['lambda'] = 0.1
     num_boost_round_cv = 600
-    num_boost_round_pred = 200
+    num_boost_round_pred = 600
 
