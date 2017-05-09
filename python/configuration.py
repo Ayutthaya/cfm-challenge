@@ -28,6 +28,8 @@ if CONFIGSTRING == 'default':
     params['nthread'] = 4
     params['eval_metric'] = 'error'
     params['lambda'] = 0.1
+    num_boost_round_cv = 150
+    num_boost_round_pred = 75
 
 elif CONFIGSTRING == 'slow':
     params['learning_rate'] = 0.05
@@ -37,6 +39,17 @@ elif CONFIGSTRING == 'slow':
     params['nthread'] = 4
     params['eval_metric'] = 'error'
     params['lambda'] = 0.1
+    num_boost_round_cv = 150
+    num_boost_round_pred = 75
 
-num_boost_round_cv = 150
-num_boost_round_pred = 75
+elif CONFIGSTRING == 'slower':
+    params['learning_rate'] = 0.03
+    params['bst:max_depth'] = 4
+    params['min_child_weight'] = 6
+    params['objective'] = 'binary:logistic'
+    params['nthread'] = 4
+    params['eval_metric'] = 'error'
+    params['lambda'] = 0.1
+    num_boost_round_cv = 600
+    num_boost_round_pred = 200
+
