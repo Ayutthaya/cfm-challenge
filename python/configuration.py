@@ -1,5 +1,5 @@
-with open('~/.confignumber') as confignumberfile:
-    CONFIGNUMBER = int(list(confignumberfile)[0].strip())
+with open('~/.configstring') as configstringfile:
+    CONFIGSTRING = list(configstringfile)[0].strip()
 
 DATADIR='/home/ubuntu/data/'
 TRAINFILE=DATADIR+'training_input.csv'
