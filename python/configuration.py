@@ -17,13 +17,24 @@ TRAINPICKLE='train.pkl'
 TESTPICKLE='test.pkl'
 
 params={}
-params['learning_rate'] = 0.1
-params['bst:max_depth'] = 10
-params['min_child_weight'] = 4
-params['objective'] = 'binary:logistic'
-params['nthread'] = 4
-params['eval_metric'] = 'error'
-params['lambda'] = 0.1
+
+if CONFIGSTRING == 'default':
+    params['learning_rate'] = 0.1
+    params['bst:max_depth'] = 10
+    params['min_child_weight'] = 4
+    params['objective'] = 'binary:logistic'
+    params['nthread'] = 4
+    params['eval_metric'] = 'error'
+    params['lambda'] = 0.1
+
+elif CONFIGSTRING == 'slow':
+    params['learning_rate'] = 0.01
+    params['bst:max_depth'] = 10
+    params['min_child_weight'] = 6
+    params['objective'] = 'binary:logistic'
+    params['nthread'] = 4
+    params['eval_metric'] = 'error'
+    params['lambda'] = 0.1
 
 num_boost_round_cv = 150
 num_boost_round_pred = 75

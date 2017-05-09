@@ -6,6 +6,8 @@ import xgboost as xgb
 
 from configuration import *
 
+print('config string: ' + CONFIGSTRING)
+
 print('reading feature names')
 with open(FEATURENAMEFILE) as featurenamefile:
     feature_names = [x.strip() for x in list(featurenamefile)]
@@ -19,6 +21,10 @@ dtrain = xgb.DMatrix(data=np.load(TRAINPICKLE+'.npy').T, feature_names = feature
 print('setting up params')
 prior=label.mean()
 params['base_score'] = prior
+
+print('xgboost params:')
+for key in params:
+    print(key + ': ' + repr(params[key]))
 
 print('training model')
 bst = xgb.train(params, dtrain, num_boost_round_pred)
