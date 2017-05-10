@@ -23,6 +23,8 @@ for stage in ('train', 'test'):
 
     #features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
 
+    features['consecutive_size_diff'] = np.abs(get_data(train_data, 'bid_size_1', 0).values - get_data(train_data, 'bid_size_1', -1000).shift(1).values)
+
     features['simple_mmp'] = mmp(get_data(data, 'bid_size_1', 0), get_data(data, 'ask_size_1', 0))
 
     features['entry_based_mmp'] = mmp(get_data(data, 'bid_entry_1', 0), get_data(data, 'ask_entry_1', 0))
