@@ -19,9 +19,9 @@ for stage in ('train', 'test'):
     features = {}
 
     tse = two_sided_ema(data)
-    #features['two_sided_ema'] = tse
+    features['two_sided_ema'] = tse
 
-    features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
+    #features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
 
     features['simple_mmp'] = mmp(get_data(data, 'bid_size_1', 0), get_data(data, 'ask_size_1', 0))
 
