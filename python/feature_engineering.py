@@ -18,13 +18,14 @@ for stage in ('train', 'test'):
 
     features = {}
 
-    features['two_sided_ema'] = two_sided_ema(data)
+    tse = two_sided_ema(data)
+    #features['two_sided_ema'] = tse
 
-    #features['3_days_two_sided_ema'] = features['two_sided_ema'] + 0.1 * (day_shift(features['two_sided_ema'], 1) + day_shift(features['two_sided_ema'], -1))
+    features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
 
-    #features['simple_mmp'] = mmp(get_data(data, 'bid_size_1', 0), get_data(data, 'ask_size_1', 0))
+    features['simple_mmp'] = mmp(get_data(data, 'bid_size_1', 0), get_data(data, 'ask_size_1', 0))
 
-    #features['entry_based_mmp'] = mmp(get_data(data, 'bid_entry_1', 0), get_data(data, 'ask_entry_1', 0))
+    features['entry_based_mmp'] = mmp(get_data(data, 'bid_entry_1', 0), get_data(data, 'ask_entry_1', 0))
 
     for side in ('bid', 'ask'):
         for level in ('1', '2'):
