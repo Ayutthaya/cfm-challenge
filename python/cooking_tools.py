@@ -140,3 +140,13 @@ def get_open_close(data, cols, left, right):
     Get |open - close| in window [left, right]
     '''
     return np.abs(get_data(data, cols, 0).shift(-left) - get_data(data, cols, 0).shift(-right))
+
+
+def BaggingLogisticRegression(C=0.1, n_estimators=10, max_samples=0.75, n_jobs=1):
+    '''
+    Create an ensemble of LogisticRegression classifiers
+    '''
+    from sklearn.ensemble import BaggingClassifier
+    from sklearn.linear_model import LogisticRegression
+
+    return BaggingClassifier(base_estimator=LogisticRegression(C=C), n_estimators=n_estimators, max_samples=max_samples, n_jobs=n_jobs)
