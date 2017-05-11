@@ -1,8 +1,20 @@
+Define host
+-----------
+
+Copy the following in /home/nath/.ssh/config
+
+Host tmpaws
+    HostName your-remote-machine-public-dns
+    User ubuntu
+    IdentityFile /home/nath/ssh-keys/AAA.pem
+
 Run the pipeline
 ----------------
-fab -f ../Kaggle/tools/python/fabfile.py -i ~/ssh-keys/AAA.pem -H ubuntu@172.31.29.87 prepare:data_path=/home/nath/Projects/challenge-cfm/data.tar.gz,branch=master
+
+fab -f ../Kaggle/tools/python/fabfile.py -H tmpaws prepare:data_path=/home/nath/Projects/challenge-cfm/data.tar.gz,branch=master,configstring='default'
 
 Forward ssh to connect remote notebook
 --------------------------------------
-ssh -i ~/ssh-keys/AAA.pem -NL 8157:localhost:8888 ubuntu@your-remote-machine-public-dns
+
+ssh -NL 8157:localhost:8888 tmpaws
 (see http://www.datasciencebytes.com/bytes/2015/12/18/using-jupyter-notebooks-securely-on-remote-linux-machines/)
