@@ -46,6 +46,13 @@ def get_target(path):
     return pandas.read_csv(path, sep=';')['TARGET'].values
 
 
+def consecutive_diff(data, cols):
+    '''
+    Compute abs diff between current value and next value in time, i.e. offset == -1000 of next ID
+    '''
+    return np.abs(get_data(data, cols, 0).values - get_data(data, cols, -1000).shift(1).values)
+
+
 def compute_accuracy(pred, target):
     assert(len(pred) == len(target))
     return (pred == target).mean()

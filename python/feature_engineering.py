@@ -23,8 +23,8 @@ for stage in ('train', 'test'):
 
     #features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
 
-    features['consecutive_size_diff_bid'] = np.abs(get_data(data, 'bid_size_1', 0).values - get_data(data, 'bid_size_1', -1000).shift(1).values)
-    features['consecutive_size_diff_ask'] = np.abs(get_data(data, 'ask_size_1', 0).values - get_data(data, 'ask_size_1', -1000).shift(1).values)
+    features['consecutive_size_diff_bid_size_1'] = consecutive_diff(data, 'bid_size_1')
+    features['consecutive_size_diff_ask_size_1'] = consecutive_diff(data, 'ask_size_1')
 
     features['simple_mmp'] = mmp(get_data(data, 'bid_size_1', 0), get_data(data, 'ask_size_1', 0))
 
