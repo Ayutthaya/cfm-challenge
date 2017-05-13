@@ -22,7 +22,7 @@ def upload(data_path, branch='master'):
     print('data_path: %s' % data_path)
     put(data_path, '~/')
     run('tar -xzf data.tar.gz')
-    run_feature_engineering_cv(branch)
+    run_feature_engineering(branch)
 
 def run_feature_engineering_cv(branch='master'):
     synchronize_tools(branch)
@@ -38,26 +38,26 @@ def run_train_eval(branch='master'):
     run('~/anaconda3/bin/python -u data-exploration-tools/python/train_eval.py &> results/logs.txt')
     download_results()
 
-#def run_feature_engineering(branch='master'):
-    #synchronize_tools(branch)
-    #run('mkdir -p results')
-    #run('cp data-exploration-tools/python/feature_engineering.py results/')
-    #run('~/anaconda3/bin/python data-exploration-tools/python/feature_engineering.py')
-    #run_cv(branch)
+def run_feature_engineering(branch='master'):
+    synchronize_tools(branch)
+    run('mkdir -p results')
+    run('cp data-exploration-tools/python/feature_engineering.py results/')
+    run('~/anaconda3/bin/python data-exploration-tools/python/feature_engineering.py')
+    run_cv(branch)
 
-#def run_cv(branch='master'):
-    #synchronize_tools(branch)
-    #run('mkdir -p results')
-    #run('cp data-exploration-tools/python/cv.py results/')
-    #run('~/anaconda3/bin/python -u data-exploration-tools/python/cv.py &> results/logs.txt')
-    #compute_predictions(branch)
+def run_cv(branch='master'):
+    synchronize_tools(branch)
+    run('mkdir -p results')
+    run('cp data-exploration-tools/python/cv.py results/')
+    run('~/anaconda3/bin/python -u data-exploration-tools/python/cv.py &> results/logs.txt')
+    compute_predictions(branch)
 
-#def compute_predictions(branch='master'):
-    #synchronize_tools(branch)
-    #run('mkdir -p results')
-    #run('~/anaconda3/bin/python -u data-exploration-tools/python/predictions.py')
-    #run('cp data-exploration-tools/python/*py results/')
-    #download_results()
+def compute_predictions(branch='master'):
+    synchronize_tools(branch)
+    run('mkdir -p results')
+    run('~/anaconda3/bin/python -u data-exploration-tools/python/predictions.py')
+    run('cp data-exploration-tools/python/*py results/')
+    download_results()
 
 def download_results():
     run('tar -czf results-$(date +%Y-%m-%d-%H-%M-%S)-$(hostname).tar.gz results')
