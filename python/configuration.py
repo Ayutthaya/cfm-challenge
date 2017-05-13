@@ -40,7 +40,7 @@ elif CONFIGSTRING == 'slow':
     params['eval_metric'] = 'error'
     params['lambda'] = 0.1
     num_boost_round_cv = 150
-    num_boost_round_pred = 75
+    num_boost_round_pred = 142
 
 elif CONFIGSTRING == 'slower':
     params['learning_rate'] = 0.03
