@@ -79,6 +79,7 @@ for stage in ('train', 'test'):
 
     features['emp'] = get_data(data, 'bid_size_2', 0) + get_data(data, 'bid_size_1', 0) + get_data(data, 'ask_size_1', 0) + get_data(data, 'ask_size_2', 0)
     features['entry_emp'] = get_data(data, 'bid_entry_2', 0) + get_data(data, 'bid_entry_1', 0) + get_data(data, 'ask_entry_1', 0) + get_data(data, 'ask_entry_2', 0)
+    features['entropy_emp'] = get_data(data, 'bid_entropy_2', 0) + get_data(data, 'bid_entropy_1', 0) + get_data(data, 'ask_entropy_1', 0) + get_data(data, 'ask_entropy_2', 0)
 
     #X_emp = np.vstack([get_data(data, 'bid_size_2', 0).values, get_data(data, 'bid_size_1', 0).values, get_data(data, 'ask_size_1', 0).values, get_data(data, 'ask_size_2', 0).values]).T
 
