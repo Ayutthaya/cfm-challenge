@@ -150,3 +150,10 @@ def BaggingLogisticRegression(C=0.1, n_estimators=10, max_samples=0.75, n_jobs=1
     from sklearn.linear_model import LogisticRegression
 
     return BaggingClassifier(base_estimator=LogisticRegression(C=C), n_estimators=n_estimators, max_samples=max_samples, n_jobs=n_jobs)
+
+
+def rolling_X(series, left, right):
+    '''
+    Create matrix X from series by rolling values
+    '''
+    return np.vstack([series.shift(i).fillna(series).values for i in range(right, -left + 1)]).T
