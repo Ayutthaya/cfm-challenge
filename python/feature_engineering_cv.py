@@ -56,12 +56,11 @@ for stage in ('train', 'test'):
 
     for side in ('bid', 'ask'):
         for level in ('1', '2'):
-            for type_ in ('size', 'entry'):
+            for type_ in ('size', 'entry', 'entropy'):
                 col = '_'.join([side, type_, level])
                 features[col + '_open_close_500'] = get_epoch_open_close(data, col, -500)
                 features[col + '_epoch_std'] = get_epoch_std(data, col)
                 features[col + '_epoch_high_low'] = get_epoch_high_low(data, col)
-                features[col + '_consecutive_diff'] = get_rolling
                 features[col + '_consecutive_diff'] = consecutive_diff(data, col)
 
     features['bid_consecutive_diff'] = consecutive_diff(data, 'bid_1')
@@ -81,7 +80,7 @@ for stage in ('train', 'test'):
     features['emp'] = get_data(data, 'bid_size_2', 0) + get_data(data, 'bid_size_1', 0) + get_data(data, 'ask_size_1', 0) + get_data(data, 'ask_size_2', 0)
     features['entry_emp'] = get_data(data, 'bid_entry_2', 0) + get_data(data, 'bid_entry_1', 0) + get_data(data, 'ask_entry_1', 0) + get_data(data, 'ask_entry_2', 0)
 
-    X_emp = np.vstack([get_data(data, 'bid_size_2', 0).values, get_data(data, 'bid_size_1', 0).values, get_data(data, 'ask_size_1', 0).values, get_data(data, 'ask_size_2', 0).values]).T
+    #X_emp = np.vstack([get_data(data, 'bid_size_2', 0).values, get_data(data, 'bid_size_1', 0).values, get_data(data, 'ask_size_1', 0).values, get_data(data, 'ask_size_2', 0).values]).T
 
     #if stage == 'train':
         #clf_emp.fit(X_emp, label)
