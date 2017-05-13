@@ -33,15 +33,15 @@ for stage in ('train', 'test'):
 
     features = {}
 
-    #X = rolling_X(get_data(data, 'nb_trade', 0), -50, 50)
+    X = rolling_X(get_data(data, 'nb_trade', 0), -50, 50)
 
-    #if stage == 'train':
-        #clf_nb_trade.fit(X, label)
+    if stage == 'train':
+        clf_nb_trade.fit(X, label)
 
-    #features['nb_trade_logreg'] = clf_nb_trade.predict(X)
+    features['nb_trade_logreg'] = clf_nb_trade.predict_proba(X)
 
-    tse = two_sided_ema(data)
-    features['two_sided_ema'] = tse
+    #tse = two_sided_ema(data)
+    #features['two_sided_ema'] = tse
 
     #features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
 
