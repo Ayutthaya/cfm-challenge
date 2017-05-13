@@ -33,20 +33,20 @@ for stage in ('train', 'test'):
 
     features = {}
 
-    X = rolling_X(get_data(data, 'nb_trade', 0), -100, 100)
+    #X = rolling_X(get_data(data, 'nb_trade', 0), -100, 100)
 
-    if stage == 'train':
-        clf_nb_trade.fit(X, label)
+    #if stage == 'train':
+        #clf_nb_trade.fit(X, label)
 
-    features['nb_trade_logreg'] = clf_nb_trade.predict_proba(X)[:, 1]
+    #features['nb_trade_logreg'] = clf_nb_trade.predict_proba(X)[:, 1]
 
     tse = two_sided_ema(data)
     features['two_sided_ema'] = tse
 
     #features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
 
-    features['consecutive_size_diff_bid_size_1'] = consecutive_diff(data, 'bid_size_1')
-    features['consecutive_size_diff_ask_size_1'] = consecutive_diff(data, 'ask_size_1')
+    #features['consecutive_size_diff_bid_size_1'] = consecutive_diff(data, 'bid_size_1')
+    #features['consecutive_size_diff_ask_size_1'] = consecutive_diff(data, 'ask_size_1')
 
     features['simple_mmp'] = mmp(get_data(data, 'bid_size_1', 0), get_data(data, 'ask_size_1', 0))
 
@@ -59,6 +59,8 @@ for stage in ('train', 'test'):
                 features[col + '_open_close_500'] = get_epoch_open_close(data, col, -500)
                 features[col + '_epoch_std'] = get_epoch_std(data, col)
                 features[col + '_epoch_high_low'] = get_epoch_high_low(data, col)
+                features[col + '_consecutive_diff'] = get_rolling
+                features[col + '_consecutive_diff'] = consecutive_diff(data, col)
 
     features['bid_rolling_std_10'] = get_rolling(data, 'bid_1', -5, 5).std()
 
