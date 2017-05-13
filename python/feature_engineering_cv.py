@@ -17,7 +17,7 @@ label_fold_1 = label.ix[label['ID'] <= split_ID, 'TARGET'].values
 data_fold_2 = data[data['ID'] > split_ID]
 label_fold_2 = label.ix[label['ID'] > split_ID, 'TARGET'].values
 
-clf_nb_trade = BaggingLogisticRegression()
+clf_nb_trade = BaggingLogisticRegression(n_jobs=4)
 
 for stage in ('train', 'test'):
 
