@@ -43,9 +43,9 @@ for stage in ('train', 'test'):
     #features['nb_trade_logreg'] = clf_nb_trade.predict_proba(X)[:, 1]
 
     tse = two_sided_ema(data)
-    #features['two_sided_ema'] = tse
+    features['two_sided_ema'] = tse
 
-    features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
+    #features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
 
     #features['consecutive_size_diff_bid_size_1'] = consecutive_diff(data, 'bid_size_1')
     #features['consecutive_size_diff_ask_size_1'] = consecutive_diff(data, 'ask_size_1')
@@ -62,11 +62,12 @@ for stage in ('train', 'test'):
                 features[col + '_epoch_std'] = get_epoch_std(data, col)
                 features[col + '_epoch_high_low'] = get_epoch_high_low(data, col)
                 features[col + '_consecutive_diff'] = consecutive_diff(data, col)
-                features[col + '_emw_std'] = get_data(data, col, 0).ewm(com=44).std()
+                features[col + '_ewm_std'] = get_data(data, col, 0).ewm(com=44).std()
 
     features['bid_consecutive_diff'] = consecutive_diff(data, 'bid_1')
 
     features['bid_rolling_std_10'] = get_rolling(data, 'bid_1', -5, 5).std()
+    features['bid_ewm_std_10'] = get_data(data, 'bid_1', 0).ewm(com=22).std()
 
     features['bid_high_low_10'] = get_rolling(data, 'bid_1', -5, 5).max() - get_rolling(data, 'bid_1', -5, 5).min()
 
