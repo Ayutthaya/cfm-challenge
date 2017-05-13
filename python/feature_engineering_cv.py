@@ -43,9 +43,9 @@ for stage in ('train', 'test'):
     #features['nb_trade_logreg'] = clf_nb_trade.predict_proba(X)[:, 1]
 
     tse = two_sided_ema(data)
-    features['two_sided_ema'] = tse
+    #features['two_sided_ema'] = tse
 
-    #features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
+    features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
 
     #features['consecutive_size_diff_bid_size_1'] = consecutive_diff(data, 'bid_size_1')
     #features['consecutive_size_diff_ask_size_1'] = consecutive_diff(data, 'ask_size_1')
