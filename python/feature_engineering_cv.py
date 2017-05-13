@@ -33,7 +33,7 @@ for stage in ('train', 'test'):
 
     features = {}
 
-    X = rolling_X(get_data(data, 'nb_trade', 0), -15, 15)
+    X = rolling_X(get_data(data, 'nb_trade', 0), -200, 200)
 
     if stage == 'train':
         clf_nb_trade.fit(X, label)
