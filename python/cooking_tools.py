@@ -156,4 +156,4 @@ def rolling_X(series, left, right):
     '''
     Create matrix X from series by rolling values
     '''
-    return np.vstack([series.shift(i).fillna(series).values for i in range(right, -left + 1)]).T
+    return np.vstack([series.shift(i).fillna(series).values for i in range(-right, -left + 1)]).T
