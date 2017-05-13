@@ -22,7 +22,7 @@ def upload(data_path, branch='master'):
     print('data_path: %s' % data_path)
     put(data_path, '~/')
     run('tar -xzf data.tar.gz')
-    run_feature_engineering(branch)
+    run_feature_engineering_cv(branch)
 
 def run_feature_engineering_cv(branch='master'):
     synchronize_tools(branch)
