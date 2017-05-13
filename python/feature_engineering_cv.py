@@ -62,7 +62,7 @@ for stage in ('train', 'test'):
                 features[col + '_epoch_std'] = get_epoch_std(data, col)
                 features[col + '_epoch_high_low'] = get_epoch_high_low(data, col)
                 features[col + '_consecutive_diff'] = consecutive_diff(data, col)
-                features[col + '_emw_std'] = get_data(data, col, 0).emw(com=44).std()
+                features[col + '_emw_std'] = get_data(data, col, 0).ewm(com=44).std()
 
     features['bid_consecutive_diff'] = consecutive_diff(data, 'bid_1')
 
