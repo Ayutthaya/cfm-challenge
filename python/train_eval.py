@@ -14,7 +14,7 @@ with open(FEATURENAMEFILE) as featurenamefile:
 
 print('loading label')
 label = pandas.read_csv(LABELFILE, sep=';')
-split_ID = data['ID'].max() // 2
+split_ID = label['ID'].max() // 2
 label_fold_1 = label.ix[label['ID'] <= split_ID, 'TARGET'].values
 label_fold_2 = label.ix[label['ID'] > split_ID, 'TARGET'].values
 
