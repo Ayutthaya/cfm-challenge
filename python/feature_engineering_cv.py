@@ -38,7 +38,7 @@ for stage in ('train', 'test'):
     if stage == 'train':
         clf_nb_trade.fit(X, label)
 
-    features['nb_trade_logreg'] = clf_nb_trade.predict_proba(X)
+    features['nb_trade_logreg'] = clf_nb_trade.predict_proba(X)[:, 1]
 
     #tse = two_sided_ema(data)
     #features['two_sided_ema'] = tse
