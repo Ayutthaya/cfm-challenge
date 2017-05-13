@@ -33,7 +33,7 @@ for key in params:
     print(key + ': ' + repr(params[key]))
 
 print('training model')
-bst = xgb.train(params, dtrain, num_boost_round_pred, evals=[(deval, 'eval')])
+bst = xgb.train(params, dtrain, num_boost_round_cv, evals=[(deval, 'eval')])
 
 print('save fscore')
 fscore = bst.get_fscore()
