@@ -62,6 +62,8 @@ for stage in ('train', 'test'):
                 features[col + '_consecutive_diff'] = get_rolling
                 features[col + '_consecutive_diff'] = consecutive_diff(data, col)
 
+    features['bid_consecutive_diff'] = consecutive_diff(data, 'bid_1')
+
     features['bid_rolling_std_10'] = get_rolling(data, 'bid_1', -5, 5).std()
 
     features['bid_high_low_10'] = get_rolling(data, 'bid_1', -5, 5).max() - get_rolling(data, 'bid_1', -5, 5).min()
