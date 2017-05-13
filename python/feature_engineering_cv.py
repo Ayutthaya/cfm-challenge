@@ -56,7 +56,7 @@ for stage in ('train', 'test'):
 
     for side in ('bid', 'ask'):
         for level in ('1', '2'):
-            for type_ in ('size', 'entry', 'entropy'):
+            for type_ in ('size', 'entry', 'entropy', 'sqentry'):
                 col = '_'.join([side, type_, level])
                 if type_ == 'size':
                     features[col + '_open_close_500'] = get_epoch_open_close(data, col, -500)
