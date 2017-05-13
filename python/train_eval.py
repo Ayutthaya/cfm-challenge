@@ -22,7 +22,7 @@ print('loading dtrain')
 dtrain = xgb.DMatrix(data=np.load(TRAINPICKLE+'.npy').T, feature_names = feature_names, label = label_fold_1)
 
 print('loading deval')
-deval = xgb.DMatrix(data=np.load(TRAINPICKLE+'.npy').T, feature_names = feature_names, label = label_fold_2)
+deval = xgb.DMatrix(data=np.load(TESTPICKLE+'.npy').T, feature_names = feature_names, label = label_fold_2)
 
 print('setting up params')
 prior=label_fold_1.mean()
@@ -33,7 +33,7 @@ for key in params:
     print(key + ': ' + repr(params[key]))
 
 print('training model')
-bst = xgb.train(params, dtrain, num_boost_round_pred, evals=(deval, 'eval'))
+bst = xgb.train(params, dtrain, num_boost_round_pred, evals=[(deval, 'eval')])
 
 print('save fscore')
 fscore = bst.get_fscore()
