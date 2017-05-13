@@ -67,7 +67,7 @@ for stage in ('train', 'test'):
     features['bid_consecutive_diff'] = consecutive_diff(data, 'bid_1')
 
     features['bid_rolling_std_10'] = get_rolling(data, 'bid_1', -5, 5).std()
-    features['bid_ewm_std_10'] = get_data(data, 'bid_1', 0).ewm(com=22).std()
+    features['bid_ewm_std_10'] = get_data(data, 'bid_1', 0).ewm(com=44).std()
 
     features['bid_high_low_10'] = get_rolling(data, 'bid_1', -5, 5).max() - get_rolling(data, 'bid_1', -5, 5).min()
 
