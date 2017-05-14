@@ -40,6 +40,8 @@ for stage in ('train', 'test'):
 
     tse = two_sided_ema(data)
     features['two_sided_ema'] = tse
+    features['two_sided_ema_day_before'] = day_shift(tse, 1)
+    features['two_sided_ema_day_next'] = day_shift(tse, -1)
 
     #features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
 
