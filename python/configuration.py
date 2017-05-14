@@ -50,6 +50,6 @@ elif 'slower' in CONFIGSTRING:
     params['nthread'] = 4
     params['eval_metric'] = 'error'
     params['lambda'] = 0.1
-    num_boost_round_cv = 1200
+    num_boost_round_cv = 600
     num_boost_round_pred = 600
 
