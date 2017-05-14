@@ -17,6 +17,8 @@ print('loading label')
 label = pandas.read_csv(LABELFILE, sep=';')
 if 'twofold' in CONFIGSTRING:
     label, _ = split_half_label(label)
+else:
+    label = label['TARGET'].values
 
 print('loading dtrain')
 dtrain = xgb.DMatrix(data=np.load(TRAINPICKLE+'.npy').T, feature_names = feature_names, label = label)
