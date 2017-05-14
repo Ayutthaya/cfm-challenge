@@ -28,7 +28,7 @@ if 'default' in CONFIGSTRING:
     params['nthread'] = 4
     params['eval_metric'] = 'error'
     params['lambda'] = 0.1
-    num_boost_round_cv = 150
+    num_boost_round_cv = 200
     num_boost_round_pred = 60
 
 elif 'slow' in CONFIGSTRING:
