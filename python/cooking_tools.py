@@ -164,7 +164,7 @@ def split_half(data, cols=None):
     if cols is None:
         return (data[data['ID'] <= split_ID], data[data['ID'] > split_ID])
     else:
-        return (data.ix[data['ID'] <= split_ID, cols], data.ix[data['ID'] > split_ID, 'TARGET'])
+        return (data.ix[data['ID'] <= split_ID, cols], data.ix[data['ID'] > split_ID, cols])
 
 
 def split_half_label(label):
