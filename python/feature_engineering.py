@@ -83,9 +83,16 @@ for stage in ('train', 'test'):
     columnlist = []
     namelist = []
 
+    blacklist = ['bid_entry_1_epoch_high_low', 'bid_entry_2_epoch_std',
+       'bid_size_2_epoch_high_low', 'ask_entry_1_epoch_high_low',
+       'bid_open_close_10', 'bid_epoch_high_low', 'ask_entry_2_epoch_std',
+       'ask_size_2_epoch_high_low', 'bid_high_low_10',
+       'bid_sqentry_1_epoch_high_low']
+
     for name in features:
-        namelist.append(name)
-        columnlist.append(features[name])
+        if name not in blacklist:
+            namelist.append(name)
+            columnlist.append(features[name])
 
     print('save feature names')
     with open(FEATURENAMEFILE, 'w') as featurenamefile:
