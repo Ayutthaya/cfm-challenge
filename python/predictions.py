@@ -14,7 +14,7 @@ with open(FEATURENAMEFILE) as featurenamefile:
     feature_names = [x.strip() for x in list(featurenamefile)]
 
 print('loading label')
-label = pandas.read_csv(LABELFILE, sep=';')['TARGET'].values
+label = pandas.read_csv(LABELFILE, sep=';')
 if 'twofold' in CONFIGSTRING:
     label, _ = split_half_label(label)
 
