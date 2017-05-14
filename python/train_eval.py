@@ -19,7 +19,7 @@ with open(FEATURENAMEFILE) as featurenamefile:
 
 print('loading label')
 label = pandas.read_csv(LABELFILE, sep=';')
-label_fold_1, label_fold_2 = get_half_label(label)
+label_fold_1, label_fold_2 = split_half_label(label)
 
 print('loading dtrain')
 dtrain = xgb.DMatrix(data=np.load(TRAINPICKLE+'.npy').T, feature_names = feature_names, label = label_fold_1)
