@@ -42,7 +42,7 @@ elif 'slow' in CONFIGSTRING:
     num_boost_round_cv = 150
     num_boost_round_pred = 142
 
-elif 'slower' in CONFIGSTRING:
+elif 'xyz' in CONFIGSTRING:
     params['learning_rate'] = 0.03
     params['bst:max_depth'] = 4
     params['min_child_weight'] = 6
