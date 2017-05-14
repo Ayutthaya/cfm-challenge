@@ -43,7 +43,9 @@ for stage in ('train', 'test'):
     features['two_sided_ema_day_before'] = day_shift(tse, 1)
     features['two_sided_ema_day_next'] = day_shift(tse, -1)
 
-    features['day_mean'] = get_data(data, 'nb_trade', 0)[:(length // 4679)*4679].reshape(4679, -1).mean(axis=1).repeat(length // 4679 + 1)[:length]
+    nb_trade = get_data(data, 'nb_trade', 0)
+    length = nb_trade.shape[0]
+    features['day_mean'] = nb_trade[:(length // 4679)*4679].reshape(4679, -1).mean(axis=1).repeat(length // 4679 + 1)[:length]
 
     #features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
 
