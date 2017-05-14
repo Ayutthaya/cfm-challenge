@@ -43,6 +43,8 @@ for stage in ('train', 'test'):
     features['two_sided_ema_day_before'] = day_shift(tse, 1)
     features['two_sided_ema_day_next'] = day_shift(tse, -1)
 
+    features['day_mean'] = get_data(data, 'nb_trade', 0)[:(length // 4679)*4679].reshape(4679, -1).mean(axis=1).repeat(length // 4679 + 1)[:length]
+
     #features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
 
     features['simple_mmp'] = mmp(get_data(data, 'bid_size_1', 0), get_data(data, 'ask_size_1', 0))
