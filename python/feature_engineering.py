@@ -6,32 +6,42 @@ import pandas
 from cooking_tools import *
 from configuration import *
 
+
+if 'twofold' in CONFIGSTRING:
+    print('loading training set')
+    data = pandas.read_csv(TRAINFILE)
+    label = pandas.read_csv(LABELFILE, sep=';')
+
+    print('split data in 2 folds')
+    data_fold_1, data_fold_2 = split_half(data)
+    label_fold_1, label_fold_2 = split_half_label(label)
+
 for stage in ('train', 'test'):
 
-    print('loading data')
-    if stage=='train':
-        data = pandas.read_csv(TRAINFILE)
+    if 'twofold' in CONFIGSTRING:
+        print('loading data')
+        if stage=='train':
+            data = data_fold_1
+            label = label_fold_1
+        else:
+            data = data_fold_2
+            label = label_fold_2
+
     else:
-        data = pandas.read_csv(TESTFILE)
+        print('loading data')
+        if stage=='train':
+            data = pandas.read_csv(TRAINFILE)
+        else:
+            data = pandas.read_csv(TESTFILE)
 
     print('computing features')
 
     features = {}
 
-    #X = rolling_X(get_data(data, 'nb_trade', 0), -100, 100)
-
-    #if stage == 'train':
-        #clf_nb_trade.fit(X, label)
-
-    #features['nb_trade_logreg'] = clf_nb_trade.predict_proba(X)[:, 1]
-
     tse = two_sided_ema(data)
     features['two_sided_ema'] = tse
 
     #features['3_days_two_sided_ema'] = tse + 0.1 * (day_shift(tse, 1) + day_shift(tse, -1))
-
-    #features['consecutive_size_diff_bid_size_1'] = consecutive_diff(data, 'bid_size_1')
-    #features['consecutive_size_diff_ask_size_1'] = consecutive_diff(data, 'ask_size_1')
 
     features['simple_mmp'] = mmp(get_data(data, 'bid_size_1', 0), get_data(data, 'ask_size_1', 0))
 
@@ -67,21 +77,6 @@ for stage in ('train', 'test'):
     features['emp'] = get_data(data, 'bid_size_2', 0) + get_data(data, 'bid_size_1', 0) + get_data(data, 'ask_size_1', 0) + get_data(data, 'ask_size_2', 0)
     features['entry_emp'] = get_data(data, 'bid_entry_2', 0) + get_data(data, 'bid_entry_1', 0) + get_data(data, 'ask_entry_1', 0) + get_data(data, 'ask_entry_2', 0)
     features['entropy_emp'] = get_data(data, 'bid_entropy_2', 0) + get_data(data, 'bid_entropy_1', 0) + get_data(data, 'ask_entropy_1', 0) + get_data(data, 'ask_entropy_2', 0)
-
-    #X_emp = np.vstack([get_data(data, 'bid_size_2', 0).values, get_data(data, 'bid_size_1', 0).values, get_data(data, 'ask_size_1', 0).values, get_data(data, 'ask_size_2', 0).values]).T
-
-    #if stage == 'train':
-        #clf_emp.fit(X_emp, label)
-
-    #features['trained_emp'] = clf_emp.predict_proba(X_emp)[:, 1]
-
-    #X_entry_emp = np.vstack([get_data(data, 'bid_entry_2', 0).values, get_data(data, 'bid_entry_1', 0).values, get_data(data, 'ask_entry_1', 0).values, get_data(data, 'ask_entry_2', 0).values]).T
-
-    #if stage == 'train':
-        #clf_entry_emp.fit(X_entry_emp, label)
-
-    #features['trained_entry_emp'] = clf_entry_emp.predict_proba(X_entry_emp)[:, 1]
-
 
     columnlist = []
     namelist = []

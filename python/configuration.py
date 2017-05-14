@@ -20,7 +20,7 @@ TESTPICKLE='test.pkl'
 
 params={}
 
-if CONFIGSTRING == 'default':
+if 'default' in CONFIGSTRING:
     params['learning_rate'] = 0.1
     params['bst:max_depth'] = 10
     params['min_child_weight'] = 4
@@ -31,7 +31,7 @@ if CONFIGSTRING == 'default':
     num_boost_round_cv = 150
     num_boost_round_pred = 75
 
-elif CONFIGSTRING == 'slow':
+elif 'slow' in CONFIGSTRING:
     params['learning_rate'] = 0.05
     params['bst:max_depth'] = 4
     params['min_child_weight'] = 6
@@ -42,7 +42,7 @@ elif CONFIGSTRING == 'slow':
     num_boost_round_cv = 150
     num_boost_round_pred = 142
 
-elif CONFIGSTRING == 'slower':
+elif 'slower' in CONFIGSTRING:
     params['learning_rate'] = 0.03
     params['bst:max_depth'] = 4
     params['min_child_weight'] = 6

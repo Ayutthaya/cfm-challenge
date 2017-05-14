@@ -3,10 +3,14 @@
 import numpy as np
 import pandas
 import xgboost as xgb
+import sys
 
 from configuration import *
 
 print('config string: ' + CONFIGSTRING)
+
+if 'twofold' not in CONFIGSTRING:
+    sys.exit(0)
 
 print('reading feature names')
 with open(FEATURENAMEFILE) as featurenamefile:
@@ -14,9 +18,7 @@ with open(FEATURENAMEFILE) as featurenamefile:
 
 print('loading label')
 label = pandas.read_csv(LABELFILE, sep=';')
-split_ID = label['ID'].max() // 2
-label_fold_1 = label.ix[label['ID'] <= split_ID, 'TARGET'].values
-label_fold_2 = label.ix[label['ID'] > split_ID, 'TARGET'].values
+label_fold_1, label_fold_2 = get_half_label(label)
 
 print('loading dtrain')
 dtrain = xgb.DMatrix(data=np.load(TRAINPICKLE+'.npy').T, feature_names = feature_names, label = label_fold_1)

@@ -157,3 +157,16 @@ def rolling_X(series, left, right):
     Create matrix X from series by rolling values
     '''
     return np.vstack([series.shift(i).fillna(series).values for i in range(-right, -left + 1)]).T
+
+
+def split_half(data, cols=None):
+    split_ID = data['ID'].max() // 2
+    if cols is None:
+        return (data[data['ID'] <= split_ID], data[data['ID'] > split_ID])
+    else:
+        return (data.ix[data['ID'] <= split_ID, cols], data.ix[data['ID'] > split_ID, 'TARGET'])
+
+
+def split_half_label(label):
+    label_1, label_2 = split_half(label, cols='TARGET')
+    return (label_1.values, label_2.values)

@@ -3,8 +3,12 @@
 import numpy as np
 import pandas
 import xgboost as xgb
+import sys
 
 from configuration import *
+
+if 'twofold' in CONFIGSTRING:
+    sys.exit(0)
 
 print('loading label')
 label = pandas.read_csv(LABELFILE, sep=';')['TARGET'].values

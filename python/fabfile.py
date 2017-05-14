@@ -24,11 +24,11 @@ def upload(data_path, branch='master'):
     run('tar -xzf data.tar.gz')
     run_feature_engineering(branch)
 
-def run_feature_engineering_cv(branch='master'):
+def run_feature_engineering(branch='master'):
     synchronize_tools(branch)
     run('mkdir -p results')
-    run('cp data-exploration-tools/python/feature_engineering_cv.py results/')
-    run('~/anaconda3/bin/python data-exploration-tools/python/feature_engineering_cv.py')
+    run('cp data-exploration-tools/python/feature_engineering.py results/')
+    run('~/anaconda3/bin/python data-exploration-tools/python/feature_engineering.py')
     run_train_eval(branch)
 
 def run_train_eval(branch='master'):
@@ -36,13 +36,6 @@ def run_train_eval(branch='master'):
     run('mkdir -p results')
     run('cp data-exploration-tools/python/train_eval.py results/')
     run('~/anaconda3/bin/python -u data-exploration-tools/python/train_eval.py &> results/logs.txt')
-    download_results()
-
-def run_feature_engineering(branch='master'):
-    synchronize_tools(branch)
-    run('mkdir -p results')
-    run('cp data-exploration-tools/python/feature_engineering.py results/')
-    run('~/anaconda3/bin/python data-exploration-tools/python/feature_engineering.py')
     run_cv(branch)
 
 def run_cv(branch='master'):
