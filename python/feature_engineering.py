@@ -53,11 +53,9 @@ for stage in ('train', 'test'):
         for level in ('1', '2'):
             for type_ in ('size', 'entry', 'entropy', 'sqentry'):
                 col = '_'.join([side, type_, level])
-                #if type_ == 'size':
-                if True:
+                if type_ == 'size':
                     features[col + '_open_close_500'] = get_epoch_open_close(data, col, -500)
-                #if type_ == 'size' or level == '1':
-                if True:
+                if type_ == 'size' or level == '1':
                     features[col + '_epoch_high_low'] = get_epoch_high_low(data, col)
                 features[col + '_epoch_std'] = get_epoch_std(data, col)
                 features[col + '_consecutive_diff'] = consecutive_diff(data, col)
