@@ -40,10 +40,10 @@ for stage in ('train', 'test'):
 
     tse = two_sided_ema(data)
     features['two_sided_ema'] = tse
-    features['two_sided_ema_day_before'] = day_shift(tse, 1)
-    features['two_sided_ema_day_next'] = day_shift(tse, -1)
-    features['two_sided_ema_day_before_before'] = day_shift(tse, 2)
-    features['two_sided_ema_day_next_next'] = day_shift(tse, -2)
+    #features['two_sided_ema_day_before'] = day_shift(tse, 1)
+    #features['two_sided_ema_day_next'] = day_shift(tse, -1)
+    #features['two_sided_ema_day_before_before'] = day_shift(tse, 2)
+    #features['two_sided_ema_day_next_next'] = day_shift(tse, -2)
 
     nb_trade = get_data(data, 'nb_trade', 0)
     length = nb_trade.shape[0]
