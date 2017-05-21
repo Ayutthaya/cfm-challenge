@@ -76,21 +76,8 @@ def compute_signal_accuracy_scores(signal, target):
     return res[signal.argsort()]
 
 
-def two_sided_ema(data):
-    nb_trade = get_data(data, 'nb_trade', 0)
-    com = 15
-
-    signal_left = nb_trade.ewm(com=com).mean()   
-    
-    reversed_nb_trade = nb_trade.iloc[::-1]
-    signal_right = reversed_nb_trade.ewm(com=com).mean()
-    signal_right = signal_right.iloc[::-1]
-
-    signal = (signal_left + signal_right) / 2
-    signal.name = 'two_sided_ema'
-
-    return signal
-
+def two_sided_ema_nb_trade(data):
+    return two_sided_ewm(get_data(data, 'nb_trade', 0), 15, 'mean')
 
 def mmp(q_bid, q_ask):
     return (q_bid - q_ask) / (q_bid + q_ask)
@@ -105,9 +92,9 @@ def day_shift(series, n_days):
 
 def get_epoch_open_close(data, cols, offset):
     '''
-    Get abs diff of given cols between present and offset (|open - close|)
+    Get diff of given cols between present and offset (open - close)
     '''
-    return np.abs(get_data(data, cols, 0).values - get_data(data, cols, offset).values)
+    return get_data(data, cols, 0).values - get_data(data, cols, offset).values
 
 
 def get_epoch_high_low(data, column):
@@ -170,3 +157,29 @@ def split_half(data, cols=None):
 def split_half_label(label):
     label_1, label_2 = split_half(label, cols='TARGET')
     return (label_1.values, label_2.values)
+
+
+def lol(data):
+    lol = np.vstack([mmp(get_data(data, 'bid_size_1', offset), get_data(data, 'ask_size_1', offset)) for offset in OFFSETS[1:]])
+
+    return np.abs(mmp(get_data(data, 'bid_size_1', 0), get_data(data, 'ask_size_1', 0)) - lol.mean(axis=0))
+
+
+def two_sided_ewm(series, com, type_ = 'mean'):
+    if type_ == 'mean':
+        signal_left = series.ewm(com=com).mean()   
+    elif type_ == 'std':
+        signal_left = series.ewm(com=com).std()   
+
+    
+    reversed_series = series.iloc[::-1]
+    if type_ == 'mean':
+        signal_right = reversed_series.ewm(com=com).mean()
+    elif type_ == 'std':
+        signal_right = reversed_series.ewm(com=com).std()
+
+    signal_right = signal_right.iloc[::-1]
+
+    signal = (signal_left + signal_right) / 2
+
+    return signal
