@@ -21,7 +21,7 @@ Run the pipeline
 
 Run the successive steps of the processing pipeline:
 
-fab -f /path/to/python/fabfile.py -H tmpaws prepare:data_path=/path/to/data.tar.gz,configstring='default'
+fab -f /path/to/python/fabfile.py -H $REMOTEHOST -i $SSHKEYS  prepare:configstring='default'
 
 Forward ssh to connect remote notebook
 --------------------------------------
