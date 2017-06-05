@@ -183,7 +183,7 @@ def imbalance_trend(data):
     '''
     Compute trend of imbalance based on first level sizes.
     '''
-    imbalance_full = np.vstack([mmp(get_series(data, 'bid_size_1', offset), get_series(data, 'ask_size_1', offset)) for offset in OFFSETS[1:]])
+    imbalance_full = np.vstack([get_imbalance(get_series(data, 'bid_size_1', offset), get_series(data, 'ask_size_1', offset)) for offset in OFFSETS[1:]])
 
     return get_imbalance(get_series(data, 'bid_size_1', 0), get_series(data, 'ask_size_1', 0)) - imbalance_full.mean(axis=0)
 

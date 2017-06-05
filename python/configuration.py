@@ -33,7 +33,7 @@ if 'default' in CONFIGSTRING:
 
 elif 'slow' in CONFIGSTRING:
     params['learning_rate'] = 0.05
-    params['bst:max_depth'] = 4
+    params['bst:max_depth'] = 3
     params['min_child_weight'] = 10
     params['objective'] = 'binary:logistic'
     params['nthread'] = 4

@@ -60,7 +60,7 @@ for stage in ('train', 'test'):
 
                 if level == '1':
                     features[col + '_epoch_std'] = get_epoch_std(data, col)
-                    features[col + '_ewm_std'] = two_sided_ewm(series, 15, 'std')
+                    features[col + '_ewm_std'] = two_sided_ewm(get_series(data, col, 0), 15, 'std')
                     features[col + '_consecutive_diff'] = consecutive_diff(data, col)
 
     features['book_size'] = get_series(data, 'bid_size_2', 0) + get_series(data, 'bid_size_1', 0) + get_series(data, 'ask_size_1', 0) + get_series(data, 'ask_size_2', 0)
