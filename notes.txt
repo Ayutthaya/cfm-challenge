@@ -1,7 +1,15 @@
+Work with a remote AWS instance
+===============================
+
+(see http://www.datasciencebytes.com/bytes/2015/12/18/using-jupyter-notebooks-securely-on-remote-linux-machines/)
+
 Define host
 -----------
 
-Copy the following in /home/nath/.ssh/config
+This step allows to define an alias to the remote instance and connect to it more easily:
+$ ssh tmpaws
+
+Copy-paste what follows in '/path/to/.ssh/config':
 
 Host tmpaws
     HostName your-remote-machine-public-dns
@@ -11,10 +19,11 @@ Host tmpaws
 Run the pipeline
 ----------------
 
-fab -f ../Kaggle/tools/python/fabfile.py -H tmpaws prepare:data_path=/home/nath/Projects/challenge-cfm/data.tar.gz,branch=master,configstring='default'
+Run the successive steps of the processing pipeline:
+
+fab -f /path/to/python/fabfile.py -H tmpaws prepare:data_path=/path/to/data.tar.gz,configstring='default'
 
 Forward ssh to connect remote notebook
 --------------------------------------
 
 ssh -NL 8157:localhost:8888 tmpaws
-(see http://www.datasciencebytes.com/bytes/2015/12/18/using-jupyter-notebooks-securely-on-remote-linux-machines/)
