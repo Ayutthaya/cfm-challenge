@@ -22,8 +22,8 @@ params={}
 
 if 'default' in CONFIGSTRING:
     params['learning_rate'] = 0.1
-    params['bst:max_depth'] = 10
-    params['min_child_weight'] = 4
+    params['bst:max_depth'] = 4 
+    params['min_child_weight'] = 6
     params['objective'] = 'binary:logistic'
     params['nthread'] = 4
     params['eval_metric'] = 'error'
@@ -34,22 +34,12 @@ if 'default' in CONFIGSTRING:
 elif 'slow' in CONFIGSTRING:
     params['learning_rate'] = 0.05
     params['bst:max_depth'] = 4
-    params['min_child_weight'] = 6
+    params['min_child_weight'] = 10
     params['objective'] = 'binary:logistic'
     params['nthread'] = 4
     params['eval_metric'] = 'error'
     params['lambda'] = 0.1
-    num_boost_round_cv = 500
-    num_boost_round_pred = 350
-
-elif 'xyz' in CONFIGSTRING:
-    params['learning_rate'] = 0.03
-    params['bst:max_depth'] = 4
-    params['min_child_weight'] = 6
-    params['objective'] = 'binary:logistic'
-    params['nthread'] = 4
-    params['eval_metric'] = 'error'
-    params['lambda'] = 0.1
-    num_boost_round_cv = 600
-    num_boost_round_pred = 600
-
+    params['subsample'] = 0.75
+    params['colsample_bytree'] = 0.75
+    num_boost_round_cv = 200
+    num_boost_round_pred = 100

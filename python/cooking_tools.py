@@ -6,7 +6,7 @@ OFFSETS = (0, -10, -20, -50, -100, -200, -500, -1000)
 DAY = 4679
 
 
-def get_data(data, cols, offset):
+def get_series(data, cols, offset):
     '''
     Get values for given columns and with a given offset.
     Offset can be 0, -10, -20, -50, -100, -200, -500, -1000
@@ -18,9 +18,9 @@ def get_epoch_mean(data, column):
     '''
     Get mean for given column over an epoch.
     '''
-    res = get_data(data, column, 0).values
+    res = get_series(data, column, 0).values
     for offset in (-10, -20, -50, -100, -200, -500, -1000):
-        res += get_data(data, column, offset).values
+        res += get_series(data, column, offset).values
 
     return res / 8
 
@@ -29,12 +29,12 @@ def get_epoch_std(data, column):
     '''
     Get values for given column average over an epoch.
     '''
-    return np.vstack([get_data(data, column, offset).values for offset in OFFSETS]).std(axis=0)
+    return np.vstack([get_series(data, column, offset).values for offset in OFFSETS]).std(axis=0)
 
 
 def get_time(data):
     '''
-    Compute time
+    Compute time based on autocorrelation of bid abs discrete derivative.
     '''
     return (data['ID'] + 2339)%4679
 
@@ -48,17 +48,23 @@ def get_target(path):
 
 def consecutive_diff(data, cols):
     '''
-    Compute abs diff between current value and next value in time, i.e. offset == -1000 of next ID
+    Compute diff between current value and next value in time, i.e. offset == -1000 of next ID
     '''
-    return np.abs(get_data(data, cols, 0).values - get_data(data, cols, -1000).shift(1).values)
+    return get_series(data, cols, 0).values - get_series(data, cols, -1000).shift(1).values
 
 
 def compute_accuracy(pred, target):
+    '''
+    Compute accuracy score for given predictions and targets.
+    '''
     assert(len(pred) == len(target))
     return (pred == target).mean()
 
 
 def compute_signal_accuracy_scores(signal, target):
+    '''
+    Compute best accuracy score achievable with a ranking of samples (signal).
+    '''
     assert(len(signal) == len(target))
 
     n_correct = (target == 1).sum()
@@ -77,9 +83,17 @@ def compute_signal_accuracy_scores(signal, target):
 
 
 def two_sided_ema_nb_trade(data):
-    return two_sided_ewm(get_data(data, 'nb_trade', 0), 15, 'mean')
+    '''
+    Compute two-sided ema for nb_trade.
+    '''
+    return two_sided_ewm(get_series(data, 'nb_trade', 0), 15, 'mean')
 
-def mmp(q_bid, q_ask):
+
+def get_imbalance(q_bid, q_ask):
+    '''
+    Given a quantity representing the bid side and one representing the asks side,
+    compute imbalance.
+    '''
     return (q_bid - q_ask) / (q_bid + q_ask)
 
 
@@ -94,14 +108,14 @@ def get_epoch_open_close(data, cols, offset):
     '''
     Get diff of given cols between present and offset (open - close)
     '''
-    return get_data(data, cols, 0).values - get_data(data, cols, offset).values
+    return get_series(data, cols, 0).values - get_series(data, cols, offset).values
 
 
 def get_epoch_high_low(data, column):
     '''
     Get high-low for a given column over an epoch
     '''
-    stack = np.vstack([get_data(data, column, offset) for offset in OFFSETS])
+    stack = np.vstack([get_series(data, column, offset) for offset in OFFSETS])
     high = stack.max(axis=0)
     low = stack.min(axis=0)
 
@@ -110,23 +124,23 @@ def get_epoch_high_low(data, column):
 
 def get_rolling(data, cols, left, right):
     '''
-    Get rolling window (closed edges)
+    Get rolling window (closed boundaries)
     '''
     if -left == right:
-        return get_data(data, cols, 0).rolling(2*right, center=True)
+        return get_series(data, cols, 0).rolling(2*right, center=True)
     if right == 0:
         assert(left < 0)
-        return get_data(data, cols, 0).rolling(-left, center=False)
+        return get_series(data, cols, 0).rolling(-left, center=False)
     if left == 0:
         assert(right > 0)
-        return get_data(data, cols, 0).shift(-right + 1).rolling(right, center=False)
+        return get_series(data, cols, 0).shift(-right + 1).rolling(right, center=False)
 
 
 def get_open_close(data, cols, left, right):
     '''
-    Get |open - close| in window [left, right]
+    Get (open - close) in window [left, right]
     '''
-    return np.abs(get_data(data, cols, 0).shift(-left) - get_data(data, cols, 0).shift(-right))
+    return get_series(data, cols, 0).shift(-left) - get_series(data, cols, 0).shift(-right)
 
 
 def BaggingLogisticRegression(C=0.1, n_estimators=10, max_samples=0.75, n_jobs=1):
@@ -147,6 +161,9 @@ def rolling_X(series, left, right):
 
 
 def split_half(data, cols=None):
+    '''
+    Split training set in two parts.
+    '''
     split_ID = data['ID'].max() // 2
     if cols is None:
         return (data[data['ID'] <= split_ID], data[data['ID'] > split_ID])
@@ -155,17 +172,26 @@ def split_half(data, cols=None):
 
 
 def split_half_label(label):
+    '''
+    Split training labels in two parts
+    '''
     label_1, label_2 = split_half(label, cols='TARGET')
     return (label_1.values, label_2.values)
 
 
-def lol(data):
-    lol = np.vstack([mmp(get_data(data, 'bid_size_1', offset), get_data(data, 'ask_size_1', offset)) for offset in OFFSETS[1:]])
+def imbalance_trend(data):
+    '''
+    Compute trend of imbalance based on first level sizes.
+    '''
+    imbalance_full = np.vstack([mmp(get_series(data, 'bid_size_1', offset), get_series(data, 'ask_size_1', offset)) for offset in OFFSETS[1:]])
 
-    return np.abs(mmp(get_data(data, 'bid_size_1', 0), get_data(data, 'ask_size_1', 0)) - lol.mean(axis=0))
+    return get_imbalance(get_series(data, 'bid_size_1', 0), get_series(data, 'ask_size_1', 0)) - imbalance_full.mean(axis=0)
 
 
 def two_sided_ewm(series, com, type_ = 'mean'):
+    '''
+    Compute two-sided mean or std for a given series.
+    '''
     if type_ == 'mean':
         signal_left = series.ewm(com=com).mean()   
     elif type_ == 'std':

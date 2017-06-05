@@ -17,7 +17,7 @@ def upload(subfolder='python'):
 def untar_data():
     with cd('data-exploration-tools/data'):
         run('tar -xzf data.tar.gz')
-        run('mv *.csv ~/')
+    run('mv data-exploration-tools/data ~/data')
 
 def prepare(data_path=None, configstring='default'):
     set_configstring(configstring)
