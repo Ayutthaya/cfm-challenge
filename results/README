@@ -1,0 +1,5 @@
+This is the place where you can put the outputs of the pipeline to analyse them:
+- predictions
+- dump of model
+- feature scores
+- ...
