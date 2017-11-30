@@ -3,7 +3,7 @@ import os
 with open(os.path.expanduser('.configstring')) as configstringfile:
     CONFIGSTRING = list(configstringfile)[0].strip()
 
-DATADIR='/home/ubuntu/data/'
+DATADIR='/home/nfoy/data/'
 TRAINFILE=DATADIR+'training_input.csv'
 TESTFILE=DATADIR+'testing_input.csv'
 LABELFILE=DATADIR+'challenge_output_data_training_file_prediction_of_trading_activity_within_the_order_book.csv'
