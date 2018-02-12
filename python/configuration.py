@@ -42,4 +42,4 @@ elif 'slow' in CONFIGSTRING:
     params['subsample'] = 0.75
     params['colsample_bytree'] = 0.75
     num_boost_round_cv = 200
-    num_boost_round_pred = 100
+    num_boost_round_pred = 140

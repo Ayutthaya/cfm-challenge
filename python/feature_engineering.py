@@ -76,9 +76,16 @@ for stage in ('train', 'test'):
     features['bid_left_trend_7'] = get_series(data, 'bid_1', 0) - get_rolling(data, 'bid_1', -7, 0).mean()
     features['bid_right_trend_5'] = get_series(data, 'bid_1', 0) - get_rolling(data, 'bid_1', 0, 5).mean()
 
-    for i in (30, 60, 100, 150, 500, 1000):
-        features['tse_nbt_' + str(i)] = two_sided_ewm(get_series(data, 'nb_trade', 0), i, 'mean')
-        features['tse_nbt_' + str(i)] = two_sided_ewm(get_series(data, 'nb_trade', 0), i, 'std')
+    features['spread'] = 0
+    for offset in OFFSETS:
+        features['spread'] += get_series(data, 'ask_1', offset) - get_series(data, 'bid_1', offset) - 1
+
+    features['level_diff_bid'] = 0
+    features['level_diff_ask'] = 0
+    for offset in OFFSETS:
+        for side in ('bid', 'ask'):
+            features['level_diff_' + side] += np.abs(get_series(data, side + '_2', offset) - get_series(data, side + '_1', offset) - 1)
+            features['level_diff_' + side] += np.abs(get_series(data, side + '_2', offset) - get_series(data, side + '_1', offset) - 1)
 
     blacklist = []
     columnlist = []
